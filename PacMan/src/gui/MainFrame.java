@@ -60,6 +60,7 @@ public class MainFrame extends javax.swing.JFrame {
         comboPacMan.setMaximumSize(new java.awt.Dimension(200, 20));
         comboPacMan.setMinimumSize(new java.awt.Dimension(200, 20));
         comboPacMan.setPreferredSize(new java.awt.Dimension(200, 20));
+        comboPacMan.setSelectedIndex(2);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
