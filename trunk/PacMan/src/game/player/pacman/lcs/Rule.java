@@ -5,8 +5,9 @@ import game.core.Game;
 
 import java.util.Vector;
 
-public class MultipleConditions implements Condition {
-	Vector<Condition> conditions = new Vector<Condition>();
+public class Rule implements Condition {
+	private Vector<Condition> conditions = new Vector<Condition>();
+	private MoveAction action;
 	
 	public boolean match(Game game) {
 		for (Condition condition : conditions) {
@@ -18,5 +19,13 @@ public class MultipleConditions implements Condition {
 
 	public void add(DistanceCondition condition) {
 		conditions.add(condition);
+	}
+
+	public void setAction(MoveAction action) {
+		this.action = action;
+	}
+	
+	public int getActionDirection(Game game) {
+		return action.getDirection(game);
 	}
 }
