@@ -14,7 +14,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		
 		
 		
-		for(int i=0;i<G.NUM_GHOSTS;i++)										
+		for(int i=0;i<G.NUM_GHOSTS;i++)
 			if(game.getLairTime(i)==0)
 				if(game.isEdible(i))
 					GameView.addPoints(game,Color.GREEN,game.getPath(currentLocation,game.getCurGhostLoc(i)));
