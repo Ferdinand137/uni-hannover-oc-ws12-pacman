@@ -17,6 +17,8 @@ public class RuleFunctions {
 			pathsToGhosts.add(game.getPath(currentLocation, game.getCurGhostLoc(i)));
 		}
 		
+		if(pathsToGhosts.isEmpty()) return Integer.MAX_VALUE;
+		
 		return pathsToGhosts.getShortest().length;
 	}
 
