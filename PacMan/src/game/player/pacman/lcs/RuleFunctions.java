@@ -22,13 +22,44 @@ public class RuleFunctions {
 		}
 	}
 	
+	enum Thing {
+		GHOST, PILL, POWER_PILL
+	}
+	
+	
+	boolean isInDistance(Thing thing, Range range) {
+		float dist = -1;
+		
+		switch (thing) {
+		case GHOST:
+			dist = getNextGhostDistance();
+			break;
+
+		case PILL:
+			dist = getNextPillDistance();
+			break;
+			
+		case POWER_PILL:
+			dist = getNextPowerPillDistance();
+			break;
+		}
+		
+		return range.isInside(dist);
+	}
+	
 	int getNextGhostDistance() {
 		return pathsToGhosts.getShortest().length;
 	}
-	
+
 	int getNextPillDistance() {
 		// TODO
 		return 0;
 	}
+
+	int getNextPowerPillDistance() {
+		// TODO
+		return 0;
+	}
+	
 	
 }
