@@ -28,17 +28,11 @@ public final class LcsPacMan extends AbstractPlayer{
 		
 		// dann nachm motto:
 		if(test.match(game)) test.getActionDirection(game);
+		// TODO aus conditions alle raussuchen wo match true
+		// von denen raussuchen in welche richtung sie laufen wollen
+		// erstmal zB einfache mehrheitentscheidung
 		
-		
-		
-		this.game = game;
-
 		int[] directions=game.getPossiblePacManDirs(false);
-		int[] neighbours = game.getPacManNeighbours();
-		
-//		if(!pathsToGhosts.isEmpty()) {
-			// TODO wenn neighbor[i] == ghostPfad[1] dann diesen weg abwerten oder so
-//		}
 		return directions[G.rnd.nextInt(directions.length)];		
 	}
 
