@@ -47,7 +47,7 @@ public class RuleFunctions {
 		return range.isInside(dist);
 	}
 	
-	int getNextGhostDistance() {
+	public int getNextGhostDistance() {
 		return pathsToGhosts.getShortest().length;
 	}
 
