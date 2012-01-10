@@ -15,9 +15,15 @@ public final class LcsPacMan extends AbstractPlayer{
 	
 	RuleFunctions ruleFunctions;
 	static Game game;
-	
+	 public LcsPacMan() {
+		System.out.println("neuer pacman");
+	}
+	 
 	@Override
 	public int getAction(Game game,long timeDue){
+		
+if(game.gameOver())
+		System.out.println("GAME OVER");
 		Vector<Rule> conditions = new Vector<Rule>();
 		
 		Rule test = new Rule();
