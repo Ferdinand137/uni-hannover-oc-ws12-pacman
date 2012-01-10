@@ -6,7 +6,7 @@ import gui.AbstractPlayer;
 
 public final class RandomPacMan extends AbstractPlayer{
 	
-	private long lastAction = 0;
+	//private long lastAction = 0;
 	@Override
 	public int getAction(Game game,long timeDue){
 //		if(timeDue - lastAction > 1500){ // Change evry 1500 ms Randomly the direction 
@@ -16,7 +16,7 @@ public final class RandomPacMan extends AbstractPlayer{
 //		}
 		if(Math.random() > 0.85){ // Change evry 1500 ms Randomly the direction 
 			int[] directions=game.getPossiblePacManDirs(true);		//set flag as true to include reversals		
-			this.lastAction = timeDue;
+		//	this.lastAction = timeDue;
 			return directions[G.rnd.nextInt(directions.length)];
 		}
 		return -1; // Neutral

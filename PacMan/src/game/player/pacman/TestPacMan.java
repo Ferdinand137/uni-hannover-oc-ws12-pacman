@@ -2,7 +2,6 @@ package game.player.pacman;
 
 import game.core.G;
 import game.core.Game;
-import game.core.Game.DM;
 import gui.AbstractPlayer;
 
 public class TestPacMan extends AbstractPlayer{
