@@ -49,6 +49,7 @@ public class MainFrame extends javax.swing.JFrame {
         comboGhosts.setMaximumSize(new java.awt.Dimension(200, 20));
         comboGhosts.setMinimumSize(new java.awt.Dimension(200, 20));
         comboGhosts.setPreferredSize(new java.awt.Dimension(200, 20));
+        comboGhosts.setSelectedIndex(3);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
