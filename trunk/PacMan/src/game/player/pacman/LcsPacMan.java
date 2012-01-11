@@ -22,8 +22,8 @@ public final class LcsPacMan extends AbstractPlayer{
 	@Override
 	public int getAction(Game game,long timeDue){
 		
-if(game.gameOver())
-		System.out.println("GAME OVER");
+		RuleFunctions.prepareNextRound(game);
+		
 		Vector<Rule> conditions = new Vector<Rule>();
 		
 		Rule test = new Rule();
@@ -37,6 +37,7 @@ if(game.gameOver())
 		// TODO aus conditions alle raussuchen wo match true
 		// von denen raussuchen in welche richtung sie laufen wollen
 		// erstmal zB einfache mehrheitentscheidung
+		test.getActionDirection(game); // sollte funktionieren sobald marcus seins fertig hat
 		
 		int[] directions=game.getPossiblePacManDirs(false);
 		return directions[G.rnd.nextInt(directions.length)];		

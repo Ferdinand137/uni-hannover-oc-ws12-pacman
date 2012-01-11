@@ -19,15 +19,15 @@ public class DistanceCondition implements Condition {
 		
 		switch (thing) {
 		case GHOST:
-			dist = RuleFunctions.getNextGhostDistance(game);
+			dist = RuleFunctions.getNextGhostDistance();
 			break;
 
 		case PILL:
-			dist = RuleFunctions.getNextPillDistance(game);
+			dist = RuleFunctions.getNextPillDistance();
 			break;
 			
 		case POWER_PILL:
-			dist = RuleFunctions.getNextPowerPillDistance(game);
+			dist = RuleFunctions.getNextPowerPillDistance();
 			break;
 		}
 		
