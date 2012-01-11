@@ -30,6 +30,7 @@ public class MoveAction {
 			break;
 		case PILL:
 			direction = RuleFunctions.getNextPillDirection();
+			
 			break;
 		case POWER_PILL:
 			direction = RuleFunctions.getNextPowerPillDirection();

@@ -30,6 +30,8 @@ public final class LcsPacMan extends AbstractPlayer{
 		test.add(new DistanceCondition(Thing.GHOST, 5, 10));
 		test.add(new DistanceCondition(Thing.PILL, 1, 3));
 		test.setAction(new MoveAction(Thing.GHOST, true));
+		RuleFunctions.getNextPillDistance();
+		RuleFunctions.getNextPowerPillDistance();
 		conditions.add(test);
 		
 		// dann nachm motto:
