@@ -50,17 +50,22 @@ public class RuleFunctions {
 	}
 	
 	public static int getNextGhostDirection() {
+		// FIXME Achtung völlig ungetestet! 0 plan obs stimmt
 		assert closestGhost != null;
-		return closestGhost[1]; // TODO prüfen ob 1 korrekt ist
+		
+		for(int i = 0; i < 4; i++)
+			if(game.getNeighbour(currentLocation, i) == closestGhost[1]) return i;
+		
+		throw new RuntimeException("Weg zum Geist führt nicht über Nachbarzelle");
 	}
 	
 	public static int getNextPillDirection() {
 		assert closestPill != null;
-		return closestPill[1]; // TODO prüfen ob 1 korrekt ist
+		return closestPill[1]; // TODO fix wie getNextGhostDirection
 	}
 	
 	public static int getNextPowerPillDirection() {
 		assert closestPowerPill != null;
-		return closestPowerPill[1]; // TODO prüfen ob 1 korrekt ist
+		return closestPowerPill[1]; // TODO fix wie getNextGhostDirection
 	}
 }
