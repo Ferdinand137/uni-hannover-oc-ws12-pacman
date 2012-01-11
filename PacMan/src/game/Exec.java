@@ -8,6 +8,7 @@ import game.core.GameView;
 import game.core.Replay;
 import game.core._G_;
 import game.core._RG_;
+import game.player.pacman.LcsPacMan;
 
 import java.awt.event.ActionEvent;
 
@@ -159,7 +160,10 @@ public class Exec {
 
 			avgScore += gameTmp.getScore();
 			System.out.println("Training "+training+++" Punkte: "+gameTmp.getScore());
+			
+			if(pacManController instanceof LcsPacMan) ((LcsPacMan) pacManController).trainingRoundOver(i, trials, gameTmp);
 		}
+		if(pacManController instanceof LcsPacMan) ((LcsPacMan) pacManController).trainingOver(trials);
 
 		System.out.println("Gesamtpunkte/Versuche: "+avgScore+"/"+trials+" "+avgScore / trials);
 	}

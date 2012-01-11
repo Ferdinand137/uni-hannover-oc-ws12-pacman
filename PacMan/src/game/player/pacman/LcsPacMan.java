@@ -47,4 +47,13 @@ public final class LcsPacMan extends AbstractPlayer{
 	public String getGroupName() {
 		return "Gruppe xy - Lcs PacMan";
 	}
+
+	public void trainingRoundOver(int round, int totalTrainings, Game game) {
+		// TODO Auto-generated method stub
+	}
+
+	public void trainingOver(int trainings) {
+		// TODO Auto-generated method stub
+		
+	}
 }
