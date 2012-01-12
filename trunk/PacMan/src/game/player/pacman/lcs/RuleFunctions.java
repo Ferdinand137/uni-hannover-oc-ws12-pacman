@@ -9,7 +9,7 @@ public class RuleFunctions {
 	static SetOfPaths pathsToGhosts;
 	static SetOfPaths pathsToPill;
 	static SetOfPaths pathsToPowerPill;
-	static Path closestGhost;
+	static PathToGhost closestGhost;
 	static Path closestPill;
 	static Path closestPowerPill;
 	static int distancePill;
@@ -29,10 +29,10 @@ public class RuleFunctions {
 		for (int i = 0; i < G.NUM_GHOSTS; i++) {
 			if (game.getLairTime(i) > 0)
 				continue; // ignore erstmal
-			pathsToGhosts.add(new Path(game.getPath(currentLocation, game.getCurGhostLoc(i))));
+			pathsToGhosts.add(new PathToGhost(i, game.getPath(currentLocation, game.getCurGhostLoc(i))));
 		}
 
-		closestGhost = pathsToGhosts.isEmpty() ? null : pathsToGhosts.getShortest();
+		closestGhost = (PathToGhost) (pathsToGhosts.isEmpty() ? null : pathsToGhosts.getShortest());
 
 		// alle aktiven Pillen holen
 		int[] activePills = game.getPillIndicesActive();
@@ -56,6 +56,9 @@ public class RuleFunctions {
 				.getShortest();
 	}
 
+	public static int getNextGhostId() {
+		return closestGhost.ghostId;
+	}
 	public static int getNextGhostDistance() {
 		return getLengthOfPath(closestGhost);
 	}
