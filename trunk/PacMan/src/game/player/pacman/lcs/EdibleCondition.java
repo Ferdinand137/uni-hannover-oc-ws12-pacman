@@ -12,8 +12,11 @@ public class EdibleCondition implements Condition {
 
 	@Override
 	public boolean match(Game game) {
+		int nearestGhost = RuleFunctions.getNextGhostId();
+		System.out.println(nearestGhost);
+		System.out.println(game.isEdible(nearestGhost));
 		// TODO Auto-generated method stub
-		return false;
+		return edible == game.isEdible(nearestGhost);
 	}
 
 }
