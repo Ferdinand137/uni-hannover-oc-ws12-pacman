@@ -16,17 +16,18 @@ public final class LcsPacMan extends AbstractPlayer{
 	RuleFunctions ruleFunctions;
 	static Game game;
 	 public LcsPacMan() {
+		System.out.println("---");
+		System.out.println("---");
 		System.out.println("neuer pacman");
+		System.out.println("---");
+		System.out.println("---");
 	}
 	 
 	@Override
 	public int getAction(Game game,long timeDue){
+		System.out.println("---");
 		
 		RuleFunctions.prepareNextRound(game);
-		
-		System.out.println("next ghost: " + RuleFunctions.getNextGhostDistance());
-		System.out.println("next power pill: " + RuleFunctions.getNextPowerPillDistance());
-		
 		
 		Vector<Rule> ruleSet = new Vector<Rule>();
 		
@@ -96,7 +97,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		for (Rule rule : ruleSet) {
 			++regelZumAusgebenNurBlub;
 			if(rule.match(game))
-				System.out.println(regelZumAusgebenNurBlub + "st rule matches");
+				System.out.println(regelZumAusgebenNurBlub + ". rule matches");
 
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:

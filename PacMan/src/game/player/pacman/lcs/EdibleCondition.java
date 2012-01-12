@@ -4,7 +4,7 @@ import game.core.Game;
 
 public class EdibleCondition implements Condition {
 	
-	boolean edible;
+	final boolean edible;
 	
 	public EdibleCondition(boolean edible) {
 		this.edible = edible;
@@ -12,10 +12,7 @@ public class EdibleCondition implements Condition {
 
 	@Override
 	public boolean match(Game game) {
-		int nearestGhost = RuleFunctions.getNextGhostId();
-		System.out.println(nearestGhost);
-		System.out.println(game.isEdible(nearestGhost));
-		// TODO Auto-generated method stub
+		final int nearestGhost = RuleFunctions.getNextGhostId();
 		return edible == game.isEdible(nearestGhost);
 	}
 
