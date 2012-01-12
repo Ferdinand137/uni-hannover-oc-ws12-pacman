@@ -30,9 +30,13 @@ public class SetOfPaths {
 	}
 
 	public String toString() {
-		String ausgabe = null;
+		String ausgabe = "";
 		for (int[] wert : paths) {
-			ausgabe = ausgabe + wert + "\n";
+			ausgabe += wert.length + ": ";
+			for (int i : wert) {
+				ausgabe += i + ", ";
+			}
+			ausgabe += "\n";
 		}
 		return ausgabe;
 	}
