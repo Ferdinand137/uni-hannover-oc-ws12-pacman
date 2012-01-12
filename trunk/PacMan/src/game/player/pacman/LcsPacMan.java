@@ -90,8 +90,9 @@ public final class LcsPacMan extends AbstractPlayer{
 		
 		int regelZumAusgebenNurBlub = 0;
 		for (Rule rule : ruleSet) {
+			++regelZumAusgebenNurBlub;
 			if(rule.match(game))
-				System.out.println(++regelZumAusgebenNurBlub + "st rule matches");
+				System.out.println(regelZumAusgebenNurBlub + "st rule matches");
 
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
