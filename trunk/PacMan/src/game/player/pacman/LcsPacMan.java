@@ -4,6 +4,7 @@ import game.core.Game;
 import game.player.pacman.lcs.DistanceCondition;
 import game.player.pacman.lcs.EdibleCondition;
 import game.player.pacman.lcs.MoveAction;
+import game.player.pacman.lcs.MoveRecommendation;
 import game.player.pacman.lcs.Rule;
 import game.player.pacman.lcs.RuleFunctions;
 import game.player.pacman.lcs.Thing;
@@ -90,7 +91,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		*/
 		
 		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3, #gesamt=4 
-		int[] direction_counter = new int[5];
+		float[] direction_counter = new float[5];
 		float[] direction_weight = new float[4];
 		
 		int regelZumAusgebenNurBlub = 0;
@@ -101,13 +102,13 @@ public final class LcsPacMan extends AbstractPlayer{
 
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
-				int dir = rule.getActionDirection(game);
+				MoveRecommendation dir = rule.getActionDirection(game);
 				// FIXME: getActionDirection liefert immer 4
 				// sollte ja eigentlich immer zwichen 0 und 3 liefern
 				// oder habe ich da was falsch verstanden?
 				System.out.println("getActionDirection: " + dir);
-				direction_counter[dir]++;
-				direction_counter[4]++;
+				direction_counter[dir.direction] += dir.keinPlan;
+				direction_counter[4] += dir.keinPlan;
 			}
 		}
 		

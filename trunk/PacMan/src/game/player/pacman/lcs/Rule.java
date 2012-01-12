@@ -28,7 +28,7 @@ public class Rule implements Condition {
 		this.action = action;
 	}
 	
-	public int getActionDirection(Game game) {
+	public MoveRecommendation getActionDirection(Game game) {
 		return action.getDirection(game);
 	}
 }
