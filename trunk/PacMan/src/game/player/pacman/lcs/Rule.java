@@ -9,6 +9,12 @@ public class Rule implements Condition {
 	private Vector<Condition> conditions = new Vector<Condition>();
 	private MoveAction action;
 	
+	/*
+	 * > 0 good rule
+	 * < 0 bad rule, e.g. ghost near -> go to ghost; wird negativ gewertet
+	 */
+	private float fitness = 1;
+	
 	// TODO Regeln brauchen ne art Wahrscheinlichkeit - evtl das gleiche wie fitness
 	// erstmal einfach alle den gleichen wert :)
 	
@@ -28,7 +34,11 @@ public class Rule implements Condition {
 		this.action = action;
 	}
 	
+	public void setFitness(float fitness) {
+		this.fitness = fitness;
+	}
+	
 	public MoveRecommendation getActionDirection(Game game) {
-		return action.getDirection(game);
+		return new MoveRecommendation(action.getDirection(game), fitness);
 	}
 }
