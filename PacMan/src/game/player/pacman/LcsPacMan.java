@@ -87,7 +87,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		float[] direction_weight = new float[4];
 		
 		for (Rule rule : conditions) {
-			System.out.println(rule.match(game));
+			System.out.println("rule.match: " + rule.match(game));
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
 				int dir = rule.getActionDirection(game);
