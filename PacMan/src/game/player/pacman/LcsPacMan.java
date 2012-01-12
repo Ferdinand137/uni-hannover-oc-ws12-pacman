@@ -90,9 +90,9 @@ public final class LcsPacMan extends AbstractPlayer{
 		ruleSet.add(rule8);
 		*/
 		
-		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3, #gesamt=4 
-		float[] direction_counter = new float[5];
-		float[] direction_weight = new float[4];
+		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3 
+		float[] directionCounter = new float[4];
+		//float[] direction_weight = new float[4];
 		
 		int regelZumAusgebenNurBlub = 0;
 		for (Rule rule : ruleSet) {
@@ -107,24 +107,24 @@ public final class LcsPacMan extends AbstractPlayer{
 				// sollte ja eigentlich immer zwichen 0 und 3 liefern
 				// oder habe ich da was falsch verstanden?
 				System.out.println("getActionDirection: " + dir);
-				direction_counter[dir.direction] += dir.keinPlan;
-				direction_counter[4] += dir.keinPlan;
+				directionCounter[dir.direction] += dir.keinPlan;
 			}
 		}
 		
 		int dir = -1;
 		for (int i = 0; i < 4; i++) {
-			float max_weight = 0;
-			if (direction_counter[4] > 0) {
-				direction_weight[i] = ((float)direction_counter[i])/direction_counter[4];
-				// TODO: Entscheidungsregel, wenn zwei oder mehr Richtungen gleichhaeufig vorkommen
-				if (direction_weight[i] > max_weight) {
-					dir = i;
-					max_weight = direction_weight[i];
-				}
-			} else {
-				System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
+			float maxDirCount = 0;
+
+			// TODO: Entscheidungsregel, wenn zwei oder mehr Richtungen
+			// gleichhaeufig vorkommen
+			if (directionCounter[i] > maxDirCount) {
+				dir = i;
+				maxDirCount = directionCounter[i];
 			}
+
+		}
+		if (dir < 0) {
+			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
 		}
 		
 		
