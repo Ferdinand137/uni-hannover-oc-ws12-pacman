@@ -106,15 +106,9 @@ public final class LcsPacMan extends AbstractPlayer{
 		int regelZumAusgebenNurBlub = 0;
 		for (Rule rule : ruleSet) {
 			++regelZumAusgebenNurBlub;
-			if(rule.match(game))
-				System.out.println(regelZumAusgebenNurBlub + ". rule matches");
-
-			if (rule.match(game)) {
-				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
+			if(rule.match(game)) {
 				MoveRecommendation dir = rule.getActionDirection(game);
-				// FIXME: getActionDirection liefert immer 4
-				// sollte ja eigentlich immer zwichen 0 und 3 liefern
-				// oder habe ich da was falsch verstanden?
+				System.out.print(regelZumAusgebenNurBlub + ". rule matches: ");
 				System.out.println("getActionDirection: " + dir.direction + " @ " + dir.fitness);
 				directionCounter[dir.direction] += dir.fitness;
 			}
@@ -125,10 +119,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		for (int i = 0; i < 4; i++) {
 			// TODO: Entscheidungsregel, wenn zwei oder mehr Richtungen
 			// gleichhaeufig vorkommen
-			System.out.println("max: " + maxDirCount);
-			System.out.println(i + ". : " + directionCounter[i]);
 			if (directionCounter[i] > maxDirCount) {
-				System.out.println("neue beste dir: " + i);
 				dir = i;
 				maxDirCount = directionCounter[i];
 			}
