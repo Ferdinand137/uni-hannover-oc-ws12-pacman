@@ -3,21 +3,21 @@ package game.player.pacman.lcs;
 import java.util.Vector;
 
 public class SetOfPaths {
-	private Vector<int[]> paths = new Vector<int[]>();
+	private Vector<Path> paths = new Vector<Path>();
 
-	void add(int[] path) {
+	void add(Path path) {
 		paths.add(path);
 	}
 
-	public int[] getShortest() {
+	public Path getShortest() {
 		if (paths.size() == 0)
 			throw new NullPointerException(
 					"Ej du Opfer, es sind keine Pfade im Set!");
 
-		int[] shortest = null;
+		Path shortest = null;
 
-		for (int[] path : paths) {
-			if (shortest == null || shortest.length > path.length)
+		for (Path path : paths) {
+			if (shortest == null || shortest.length() > path.length())
 				shortest = path;
 		}
 
@@ -31,9 +31,9 @@ public class SetOfPaths {
 
 	public String toString() {
 		String ausgabe = "";
-		for (int[] wert : paths) {
-			ausgabe += wert.length + ": ";
-			for (int i : wert) {
+		for (Path wert : paths) {
+			ausgabe += wert.length() + ": ";
+			for (int i : wert.path) {
 				ausgabe += i + ", ";
 			}
 			ausgabe += "\n";
