@@ -25,6 +25,10 @@ public final class LcsPacMan extends AbstractPlayer{
 		
 		RuleFunctions.prepareNextRound(game);
 		
+		System.out.println("next ghost: " + RuleFunctions.getNextGhostDistance());
+		System.out.println("next power pill: " + RuleFunctions.getNextPowerPillDistance());
+		
+		
 		Vector<Rule> ruleSet = new Vector<Rule>();
 		
 //		Rule test = new Rule();
@@ -64,7 +68,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		ruleSet.add(rule4);
 
 		Rule rule5 = new Rule();
-		rule5.add(new DistanceCondition(Thing.PILL, 0, 55));
+//		rule5.add(new DistanceCondition(Thing.PILL, 0, 55));
 		rule5.setAction(new MoveAction(Thing.PILL));
 		ruleSet.add(rule5);
 
