@@ -79,6 +79,10 @@ public class RuleFunctions {
 		// FIXME Achtung völlig ungetestet! 0 plan obs stimmt
 		assert path != null;
 
+		// FIXME achtung gilt nur für pacman
+		if(path.length == 1)
+			return game.getCurPacManDir();
+		
 		for (int i = 0; i < 4; i++)
 			if (game.getNeighbour(currentLocation, i) == path[1])
 				return i;
