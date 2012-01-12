@@ -25,7 +25,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		
 		RuleFunctions.prepareNextRound(game);
 		
-		Vector<Rule> conditions = new Vector<Rule>();
+		Vector<Rule> ruleSet = new Vector<Rule>();
 		
 //		Rule test = new Rule();
 //		test.add(new DistanceCondition(Thing.GHOST, 5, 10));
@@ -39,8 +39,8 @@ public final class LcsPacMan extends AbstractPlayer{
 		rule1.add(new DistanceCondition(Thing.GHOST, 3.75f, 5));
 		rule1.add(new DistanceCondition(Thing.POWER_PILL, 2.5f, 7.5f));
 		rule1.add(new EdibleCondition(false));
-		rule1.setAction(new MoveAction(Thing.POWER_PILL, true));
-		conditions.add(rule1);
+		rule1.setAction(new MoveAction(Thing.POWER_PILL));
+		ruleSet.add(rule1);
 
 		// TODO: was ist der Unterschied zwischen "not edible" und "ungleich edible"??? 
 //		Rule rule2 = new Rule();
@@ -53,41 +53,41 @@ public final class LcsPacMan extends AbstractPlayer{
 		Rule rule3 = new Rule();
 		rule3.add(new DistanceCondition(Thing.GHOST, 38.671875f, 40.390625f));
 		rule3.add(new EdibleCondition(false));
-		rule3.setAction(new MoveAction(Thing.GHOST, false));
-		conditions.add(rule3);
+		rule3.setAction(new MoveAction(Thing.GHOST, true));
+		ruleSet.add(rule3);
 
 		Rule rule4 = new Rule();
 		rule4.add(new DistanceCondition(Thing.GHOST, 5, 10));
 		rule4.add(new DistanceCondition(Thing.POWER_PILL, 5, 10));
 		rule4.add(new EdibleCondition(false));
-		rule4.setAction(new MoveAction(Thing.PILL, true));
-		conditions.add(rule4);
+		rule4.setAction(new MoveAction(Thing.PILL));
+		ruleSet.add(rule4);
 
 		Rule rule5 = new Rule();
 		rule5.add(new DistanceCondition(Thing.PILL, 0, 55));
-		rule5.setAction(new MoveAction(Thing.PILL, true));
-		conditions.add(rule5);
+		rule5.setAction(new MoveAction(Thing.PILL));
+		ruleSet.add(rule5);
 
 		Rule rule6 = new Rule();
 		rule6.add(new DistanceCondition(Thing.GHOST, 0, 13.75f));
 		rule6.add(new BlinkingCondition(false));
 		rule6.add(new EdibleCondition(false));
-		rule6.setAction(new MoveAction(Thing.GHOST, false));
-		conditions.add(rule6);
+		rule6.setAction(new MoveAction(Thing.GHOST, true));
+		ruleSet.add(rule6);
 
 		// TODO: junction ...
 		//Rule rule7 = new Rule();
 		
 		Rule rule8 = new Rule();
 		rule8.add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f));
-		rule8.setAction(new MoveAction(Thing.POWER_PILL, false));
-		conditions.add(rule8);
+		rule8.setAction(new MoveAction(Thing.POWER_PILL, true));
+		ruleSet.add(rule8);
 		
 		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3, #gesamt=4 
 		int[] direction_counter = new int[5];
 		float[] direction_weight = new float[4];
 		
-		for (Rule rule : conditions) {
+		for (Rule rule : ruleSet) {
 			System.out.println("rule.match: " + rule.match(game));
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
