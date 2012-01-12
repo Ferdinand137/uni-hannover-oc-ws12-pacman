@@ -93,6 +93,14 @@ public final class LcsPacMan extends AbstractPlayer{
 		
 		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3 
 		float[] directionCounter = new float[4];
+		
+		for(int i = 0; i < 4; i++) {
+			if(game.getNeighbour(game.getCurPacManLoc(), i) == -1) {
+				// in die richtung ist ne wand!
+				directionCounter[i] = Float.NEGATIVE_INFINITY;
+			}
+		}
+		
 		//float[] direction_weight = new float[4];
 		
 		int regelZumAusgebenNurBlub = 0;
@@ -113,12 +121,14 @@ public final class LcsPacMan extends AbstractPlayer{
 		}
 		
 		int dir = -1;
+		float maxDirCount = Float.NEGATIVE_INFINITY;
 		for (int i = 0; i < 4; i++) {
-			float maxDirCount = 0;
-
 			// TODO: Entscheidungsregel, wenn zwei oder mehr Richtungen
 			// gleichhaeufig vorkommen
+			System.out.println("max: " + maxDirCount);
+			System.out.println(i + ". : " + directionCounter[i]);
 			if (directionCounter[i] > maxDirCount) {
+				System.out.println("neue beste dir: " + i);
 				dir = i;
 				maxDirCount = directionCounter[i];
 			}
