@@ -1,7 +1,6 @@
 package game.player.pacman;
 
 import game.core.Game;
-import game.player.pacman.lcs.BlinkingCondition;
 import game.player.pacman.lcs.DistanceCondition;
 import game.player.pacman.lcs.EdibleCondition;
 import game.player.pacman.lcs.MoveAction;
@@ -75,7 +74,7 @@ public final class LcsPacMan extends AbstractPlayer{
 
 		Rule rule6 = new Rule();
 		rule6.add(new DistanceCondition(Thing.GHOST, 0, 13.75f));
-		rule6.add(new BlinkingCondition(false));
+		//rule6.add(new BlinkingCondition(false));
 		rule6.add(new EdibleCondition(false));
 		rule6.setAction(new MoveAction(Thing.GHOST, true));
 		ruleSet.add(rule6);
