@@ -128,7 +128,7 @@ public final class LcsPacMan extends AbstractPlayer{
 
 	@Override
 	public String getGroupName() {
-		return "Gruppe xy - Lcs PacMan";
+		return "Gruppe2_PacMan";
 	}
 
 	public void trainingRoundOver(int round, int totalTrainings, Game game) {
