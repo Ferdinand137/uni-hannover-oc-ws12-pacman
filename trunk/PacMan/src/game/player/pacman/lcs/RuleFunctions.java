@@ -15,8 +15,7 @@ public class RuleFunctions {
 	static int distancePill;
 	static Game game;
 
-	private RuleFunctions() {
-	}
+	private RuleFunctions() {}
 
 	public static void prepareNextRound(Game game) {
 		RuleFunctions.game = game;
@@ -34,8 +33,7 @@ public class RuleFunctions {
 					game.getCurGhostLoc(i)));
 		}
 
-		closestGhost = pathsToGhosts.isEmpty() ? null : pathsToGhosts
-				.getShortest();
+		closestGhost = pathsToGhosts.isEmpty() ? null : pathsToGhosts.getShortest();
 
 		// alle aktiven Pillen holen
 		int[] activePills = game.getPillIndicesActive();
@@ -48,8 +46,7 @@ public class RuleFunctions {
 			pathsToPill.add(game.getPath(currentLocation, activePills[i]));
 		}
 
-		closestPill = pathsToPill.isEmpty() ? null : pathsToPill
-				.getShortest();
+		closestPill = pathsToPill.isEmpty() ? null : pathsToPill.getShortest();
 		
 		// Alle aktiven Pillen als Pfad eintragen
 		for (int i = 0; i < activePowerPills.length; i++) {
@@ -61,44 +58,43 @@ public class RuleFunctions {
 	}
 
 	public static int getNextGhostDistance() {
-		if (closestGhost == null)
-			return Integer.MAX_VALUE;
-		return closestGhost.length;
+		return getLengthOfPath(closestGhost);
 	}
 
-	// FIXME Tut das Ding hier was es soll?
 	public static int getNextPillDistance() {
-		System.out.println("closest Pill " + closestPill);
-		System.out.println("closest Pill.length " + closestPill.length);
-		return closestPill.length;
+		return getLengthOfPath(closestPill);
 	}
 
-	// FIXME Tut das Ding hier was es soll?
 	public static int getNextPowerPillDistance() {
-		System.out.println("closest PowerPill " + closestPowerPill);
-		System.out.println("closest PowerPill.length " + closestPowerPill.length);
-		return closestPowerPill.length;
+		return getLengthOfPath(closestPowerPill);
 	}
 
-	public static int getNextGhostDirection() {
+	private static int getLengthOfPath(int[] path) {
+		if(path == null)
+			return Integer.MAX_VALUE;
+		return path.length;
+	}
+	
+	private static int getDirectionOfPath(int[] path) {
 		// FIXME Achtung völlig ungetestet! 0 plan obs stimmt
-		assert closestGhost != null;
+		assert path != null;
 
 		for (int i = 0; i < 4; i++)
-			if (game.getNeighbour(currentLocation, i) == closestGhost[1])
+			if (game.getNeighbour(currentLocation, i) == path[1])
 				return i;
 
-		throw new RuntimeException(
-				"Weg zum Geist führt nicht über Nachbarzelle");
+		throw new RuntimeException("Weg zum führt nicht über Nachbarzelle");
+	}
+	
+	public static int getNextGhostDirection() {
+		return getDirectionOfPath(closestGhost);
 	}
 
 	public static int getNextPillDirection() {
-		assert closestPill != null;
-		return closestPill[1]; // TODO fix wie getNextGhostDirection
+		return getDirectionOfPath(closestPill);
 	}
 
 	public static int getNextPowerPillDirection() {
-		assert closestPowerPill != null;
-		return closestPowerPill[1]; // TODO fix wie getNextGhostDirection
+		return getDirectionOfPath(closestPowerPill);
 	}
 }
