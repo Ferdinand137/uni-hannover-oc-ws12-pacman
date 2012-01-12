@@ -77,18 +77,22 @@ public final class LcsPacMan extends AbstractPlayer{
 
 		// TODO: junction ...
 		//Rule rule7 = new Rule();
-		
+		/*
 		Rule rule8 = new Rule();
 		rule8.add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f));
 		rule8.setAction(new MoveAction(Thing.POWER_PILL, true));
 		ruleSet.add(rule8);
+		*/
 		
 		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3, #gesamt=4 
 		int[] direction_counter = new int[5];
 		float[] direction_weight = new float[4];
 		
+		int regelZumAusgebenNurBlub = 0;
 		for (Rule rule : ruleSet) {
-			System.out.println("rule.match: " + rule.match(game));
+			if(rule.match(game))
+				System.out.println(++regelZumAusgebenNurBlub + "rule.match");
+
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
 				int dir = rule.getActionDirection(game);
