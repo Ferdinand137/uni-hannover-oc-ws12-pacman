@@ -4,24 +4,16 @@ import game.core.Game;
 
 public class MoveAction {
 	Thing thing;
-	boolean moveAway;
 	
 	/**
 	 * move towards thing
 	 */
 	public MoveAction(Thing thing) {
 		this.thing = thing;
-		this.moveAway = false;
-	}
-	
-	
-	public MoveAction(Thing thing, boolean moveAway) {
-		this.thing = thing;
-		this.moveAway = moveAway;
 	}
 
 
-	MoveRecommendation getDirection(Game game) {
+	int getDirection(Game game) {
 		int direction;
 		
 		switch (thing) {
@@ -48,6 +40,6 @@ public class MoveAction {
 		}
 		*/
 		
-		return new MoveRecommendation(direction, moveAway ? -1 : 1);
+		return direction;
 	}
 }

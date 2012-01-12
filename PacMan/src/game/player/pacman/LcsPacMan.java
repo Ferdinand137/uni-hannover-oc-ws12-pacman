@@ -78,7 +78,8 @@ public final class LcsPacMan extends AbstractPlayer{
 		rule6.add(new DistanceCondition(Thing.GHOST, 0, 13.75f));
 		//rule6.add(new BlinkingCondition(false));
 		rule6.add(new EdibleCondition(false));
-		rule6.setAction(new MoveAction(Thing.GHOST, true));
+		rule6.setAction(new MoveAction(Thing.GHOST));
+		rule6.setFitness(-10); // important rule!
 		ruleSet.add(rule6);
 
 		// TODO: junction ...
@@ -106,8 +107,8 @@ public final class LcsPacMan extends AbstractPlayer{
 				// FIXME: getActionDirection liefert immer 4
 				// sollte ja eigentlich immer zwichen 0 und 3 liefern
 				// oder habe ich da was falsch verstanden?
-				System.out.println("getActionDirection: " + dir);
-				directionCounter[dir.direction] += dir.keinPlan;
+				System.out.println("getActionDirection: " + dir.direction + " @ " + dir.fitness);
+				directionCounter[dir.direction] += dir.fitness;
 			}
 		}
 		
