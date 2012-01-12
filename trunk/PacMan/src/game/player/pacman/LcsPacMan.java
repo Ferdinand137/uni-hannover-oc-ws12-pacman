@@ -91,7 +91,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		int regelZumAusgebenNurBlub = 0;
 		for (Rule rule : ruleSet) {
 			if(rule.match(game))
-				System.out.println(++regelZumAusgebenNurBlub + "rule.match");
+				System.out.println(++regelZumAusgebenNurBlub + "st rule matches");
 
 			if (rule.match(game)) {
 				// FIXME: game.player.pacman.lcs.RuleFunctions.getNextPillDirection wirft ArrayIndexOutOfBoundsException:
@@ -115,6 +115,8 @@ public final class LcsPacMan extends AbstractPlayer{
 					dir = i;
 					max_weight = direction_weight[i];
 				}
+			} else {
+				System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
 			}
 		}
 		
