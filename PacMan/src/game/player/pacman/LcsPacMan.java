@@ -40,8 +40,8 @@ public final class LcsPacMan extends AbstractPlayer{
 //		conditions.add(test);
 
 		Rule rule1 = new Rule();
-		rule1.add(new DistanceCondition(Thing.GHOST, 3.75f, 5));
-		rule1.add(new DistanceCondition(Thing.POWER_PILL, 2.5f, 7.5f));
+		rule1.add(new DistanceCondition(Thing.GHOST, 0, 5));
+		rule1.add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f));
 		rule1.add(new EdibleCondition(false));
 		rule1.setAction(new MoveAction(Thing.POWER_PILL));
 		ruleSet.add(rule1);
@@ -54,12 +54,13 @@ public final class LcsPacMan extends AbstractPlayer{
 //		rule2.setAction(new MoveAction(Thing.POWER_PILL, true));
 //		conditions.add(rule2);
 
-		Rule rule3 = new Rule();
+/* erstma weg da die regel 0 sinn macht
 		rule3.add(new DistanceCondition(Thing.GHOST, 38.671875f, 40.390625f));
 		rule3.add(new EdibleCondition(false));
 		rule3.setAction(new MoveAction(Thing.GHOST, true));
 		ruleSet.add(rule3);
-
+*/
+		
 		Rule rule4 = new Rule();
 		rule4.add(new DistanceCondition(Thing.GHOST, 5, 10));
 		rule4.add(new DistanceCondition(Thing.POWER_PILL, 5, 10));
