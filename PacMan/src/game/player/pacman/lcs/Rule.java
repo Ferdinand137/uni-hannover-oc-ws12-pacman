@@ -20,18 +20,10 @@ public class Rule implements Condition {
 		return true;
 	}
 
-	public void add(DistanceCondition condition) {
+	public void add(Condition condition) {
 		conditions.add(condition);
 	}
 
-	public void add(EdibleCondition condition) {
-		conditions.add(condition);
-	}
-	
-	public void add(BlinkingCondition condition) {
-		conditions.add(condition);
-	}
-	
 	public void setAction(MoveAction action) {
 		this.action = action;
 	}
