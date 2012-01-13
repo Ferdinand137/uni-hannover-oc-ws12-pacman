@@ -26,16 +26,19 @@ public class Rule implements Condition {
 		return true;
 	}
 
-	public void add(Condition condition) {
+	public Rule add(Condition condition) {
 		conditions.add(condition);
+		return this;
 	}
 
-	public void setAction(MoveAction action) {
+	public Rule setAction(MoveAction action) {
 		this.action = action;
+		return this;
 	}
 	
-	public void setFitness(float fitness) {
+	public Rule setFitness(float fitness) {
 		this.fitness = fitness;
+		return this;
 	}
 	
 	public MoveRecommendation getActionDirection(Game game) {
