@@ -15,12 +15,31 @@ import gui.AbstractPlayer;
 
 import java.util.Vector;
 
+/**
+ * For debugging time consumption. According to first measurements this does not slow down execution at all. (0,002 ms over 10 secs of 100% cpu)
+ */
+class Timer {
+	private long time, counter, start;
+	
+	void start() {
+		start = System.nanoTime();
+	}
+	
+	void stop() {
+		time += (System.nanoTime() - start);
+		counter++;
+	}
+	
+	float getAvgInMs() {
+		return time / counter / 1000 / 1000.0f;
+	}
+}
 public final class LcsPacMan extends AbstractPlayer{
 	
 	RuleFunctions ruleFunctions;
 	Vector<Rule> ruleSet = new Vector<Rule>();
 
-	long totalTime, totalTimeCounter;
+	Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer();
 	
 	static Game game;
 	 public LcsPacMan() {
@@ -42,11 +61,12 @@ public final class LcsPacMan extends AbstractPlayer{
 	 
 	@Override
 	public int getAction(Game game,long timeDue){
-		long startTime = System.nanoTime();
+		timer_total.start();
 		
 		//System.out.println("time: " + (timeDue - System.currentTimeMillis()));
 		//System.out.println("---");
 		
+		timer_prepare.start();
 		RuleFunctions.prepareNextRound(game);
 
 		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3 
@@ -58,19 +78,29 @@ public final class LcsPacMan extends AbstractPlayer{
 				directionCounter[i] = Float.NEGATIVE_INFINITY;
 			}
 		}
+		timer_prepare.stop();
 		
 		//float[] direction_weight = new float[4];
 		
-		int regelZumAusgebenNurBlub = 0;
+//		int regelZumAusgebenNurBlub = 0;
 		for (Rule rule : ruleSet) {
-			++regelZumAusgebenNurBlub;
+//			++regelZumAusgebenNurBlub;
+			
+			timer_match.start();
 			if(rule.match(game)) {
+				timer_match.stop();
+				
+				timer_getDirection.start();
 				MoveRecommendation dir = rule.getActionDirection(game);
+				timer_getDirection.stop();
+				
 				//System.out.print(regelZumAusgebenNurBlub + ". rule matches:\n");
 				for (Direction direction : Direction.values()) {
 					//System.out.println(direction + ": " + dir.fitness[direction.toInt()]);
 					directionCounter[direction.toInt()] += dir.fitness[direction.toInt()];
 				}
+			} else {
+				timer_match.stop();
 			}
 		}
 		
@@ -96,12 +126,8 @@ public final class LcsPacMan extends AbstractPlayer{
 		// von denen raussuchen in welche richtung sie laufen wollen
 		// erstmal zB einfache mehrheitentscheidung
 		//test.getActionDirection(game); // sollte funktionieren sobald marcus seins fertig hat
+		timer_total.stop();
 		
-		long endTime = System.nanoTime();
-		
-		totalTime += (endTime - startTime);
-		totalTimeCounter ++;
-
 		return dir;
 	}
 
@@ -120,7 +146,11 @@ public final class LcsPacMan extends AbstractPlayer{
 		if((round+1) % GAMES_PER_TRAINING == 0) {
 			trainingScore /= GAMES_PER_TRAINING;
 			
-			System.out.println("Avg getAction time: " + totalTime / totalTimeCounter / 1000 / 1000.0f + "ms");
+			System.out.println("Avg getAction    time: " + timer_total.getAvgInMs()        + "ms");
+			System.out.println("Avg prepare      time: " + timer_prepare.getAvgInMs()      + "ms");
+			System.out.println("Avg match        time: " + timer_match.getAvgInMs()        + "ms");
+			System.out.println("Avg getDirection time: " + timer_getDirection.getAvgInMs() + "ms");
+			
 			System.out.println("Avg score after " + GAMES_PER_TRAINING + " rounds: " + trainingScore);
 			FitnessSave.mutate();
 		}

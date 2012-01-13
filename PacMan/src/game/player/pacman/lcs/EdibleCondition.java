@@ -2,6 +2,9 @@ package game.player.pacman.lcs;
 
 import game.core.Game;
 
+/**
+ * TODO Wenn 2 Geister in der nähe sind würde aktuell Edible true zurückgeben wenn der eine essbar ist... kann böse enden
+ */
 public class EdibleCondition implements Condition {
 	
 	final boolean edible;
@@ -18,7 +21,6 @@ public class EdibleCondition implements Condition {
 
 	@Override
 	public String toId() {
-		// TODO Auto-generated method stub
 		return "#EC:" + (edible ? 'T' : 'F') + '#';
 	}
 }
