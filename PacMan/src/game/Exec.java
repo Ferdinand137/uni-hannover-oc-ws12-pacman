@@ -5,9 +5,7 @@ import game.controllers.Human;
 import game.controllers.PacManController;
 import game.core.G;
 import game.core.GameView;
-import game.core.Replay;
 import game.core._G_;
-import game.core._RG_;
 import game.player.pacman.LcsPacMan;
 
 import java.awt.event.ActionEvent;
@@ -151,6 +149,9 @@ public class Exec {
 
 		if(pacManController instanceof LcsPacMan) ((LcsPacMan) pacManController).trainingBegin(trials);
 		
+		// bugfix by AlexL
+		GameView.isVisible = false;
+		
 		for (int i = 0; i < trials; i++) {
 			gameTmp.newGame();
 
@@ -168,185 +169,11 @@ public class Exec {
 		if(pacManController instanceof LcsPacMan) ((LcsPacMan) pacManController).trainingOver(trials);
 
 		System.out.println("Gesamtpunkte/Versuche: "+avgScore+"/"+trials+" "+avgScore / trials);
+		
+		// bugfix by AlexL
+		GameView.isVisible = true;
 	}
 
-	/*
-	 * Run game without time limit. Very good for testing as game progresses as
-	 * soon as the controllers return their action(s). Can be played with and
-	 * without visual display of game states. The delay is purely for visual
-	 * purposes (as otherwise the game could be too fast if controllers compute
-	 * quickly. For testing, this can be set to 0 for fasted game play.
-	 */
-	public void runGame(PacManController pacManController,
-			GhostController ghostController, boolean visual, int delay) {
-		game = new _G_();
-		game.newGame();
-
-		GameView gv = null;
-
-		if (visual)
-			gv = new GameView(game).showGame();
-
-		while (!game.gameOver()) {
-			long due = System.currentTimeMillis() + G.DELAY;
-			game.advanceGame(pacManController.getAction(game.copy(), due),
-					ghostController.getActions(game.copy(), due));
-
-			try {
-				Thread.sleep(delay);
-			} catch (Exception e) {
-			}
-
-			if (visual)
-				gv.repaint();
-		}
-	}
-
-	/*
-	 * Run game with time limit. This is how it will be done in the competition.
-	 * Can be played with and without visual display of game states.
-	 */
-	public void runGameTimed(PacManController pacManController,
-			GhostController ghostController, boolean visual) {
-		game = new _G_();
-		game.newGame();
-		pacMan = new PacMan(pacManController);
-		ghosts = new Ghosts(ghostController);
-
-		GameView gv = null;
-
-		if (visual) {
-			gv = new GameView(game).showGame();
-
-			if (pacManController instanceof game.player.pacman.AbstractHuman){
-				Human con = new Human();
-				pacMan = new PacMan(con);
-				gv.getMainFrame().getButton().addKeyListener(con);
-			}
-		}
-
-		while (!game.gameOver()) {
-			pacMan.alert();
-			ghosts.alert();
-
-			try {
-				Thread.sleep(G.DELAY);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			game.advanceGame(pacDir, ghostDirs);
-
-			if (visual)
-				gv.repaint();
-		}
-
-		pacMan.kill();
-		ghosts.kill();
-	}
-
-	/*
-	 * Runs a game and records all directions taken by all controllers - the
-	 * data may then be used to replay any game saved using replayGame(-).
-	 */
-	public void runGameTimedAndRecorded(PacManController pacManController,
-			GhostController ghostController, boolean visual, String fileName) {
-		StringBuilder history = new StringBuilder();
-		int lastLevel = 0;
-		boolean firstWrite = false; // this makes sure the content of any
-									// existing files is overwritten
-
-		game = new _G_();
-		game.newGame();
-		pacMan = new PacMan(pacManController);
-		ghosts = new Ghosts(ghostController);
-
-		GameView gv = null;
-
-		if (visual) {
-			gv = new GameView(game).showGame();
-
-			if (pacManController instanceof Human){
-				Human con = new Human();
-				pacMan = new PacMan(con);
-				gv.getMainFrame().getButton().addKeyListener(con);
-			}
-		}
-
-		while (!game.gameOver()) {
-			pacMan.alert();
-			ghosts.alert();
-
-			try {
-				Thread.sleep(G.DELAY);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			int[] actionsTaken = game.advanceGame(pacDir, ghostDirs);
-
-			if (visual)
-				gv.repaint();
-
-			history = addActionsToString(history, actionsTaken,
-					game.getCurLevel() == lastLevel);
-
-			// saves actions after every level
-			if (game.getCurLevel() != lastLevel) {
-				Replay.saveActions(history.toString(), fileName, firstWrite);
-				lastLevel = game.getCurLevel();
-				firstWrite = true;
-				history = new StringBuilder();
-			}
-		}
-
-		// save the final actions
-		Replay.saveActions(history.toString(), fileName, firstWrite);
-
-		pacMan.kill();
-		ghosts.kill();
-	}
-
-	/*
-	 * This is used to replay a recorded game. The controllers are given by the
-	 * class Replay which may also be used to load the actions from file.
-	 */
-	public void replayGame(String fileName) {
-		_RG_ game = new _RG_();
-		game.newGame();
-
-		Replay replay = new Replay(fileName);
-		PacManController pacManController = replay.getPacMan();
-		GhostController ghostController = replay.getGhosts();
-
-		GameView gv = new GameView(game).showGame();
-
-		while (!game.gameOver()) {
-			game.advanceGame(pacManController.getAction(game.copy(), 0),
-					ghostController.getActions(game.copy(), 0));
-
-			gv.repaint();
-
-			try {
-				Thread.sleep(G.DELAY);
-			} catch (Exception e) {
-			}
-		}
-	}
-
-	private StringBuilder addActionsToString(StringBuilder history,
-			int[] actionsTaken, boolean newLine) {
-		history.append((game.getTotalTime() - 1) + "\t" + actionsTaken[0]
-				+ "\t");
-
-		for (int i = 0; i < G.NUM_GHOSTS; i++)
-			history.append(actionsTaken[i + 1] + "\t");
-
-		if (newLine)
-			history.append("\n");
-
-		return history;
-	}
 
 	// sets the latest direction to take for each game step (if controller
 	// replies in time)
