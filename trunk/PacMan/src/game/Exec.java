@@ -149,6 +149,8 @@ public class Exec {
 		_G_ gameTmp = new _G_();
 		int training = 1;
 
+		if(pacManController instanceof LcsPacMan) ((LcsPacMan) pacManController).trainingBegin(trials);
+		
 		for (int i = 0; i < trials; i++) {
 			gameTmp.newGame();
 
