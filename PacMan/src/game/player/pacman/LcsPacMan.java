@@ -39,7 +39,7 @@ public final class LcsPacMan extends AbstractPlayer{
 	RuleFunctions ruleFunctions;
 	Vector<Rule> ruleSet = new Vector<Rule>();
 
-	Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer();
+	Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer(), timer_training = new Timer();
 	
 	static Game game;
 	 public LcsPacMan() {
@@ -136,23 +136,35 @@ public final class LcsPacMan extends AbstractPlayer{
 		return "Gruppe2_PacMan";
 	}
 
+	public void trainingBegin(int totalTrainings) {
+		timer_training.start();
+	}
+	
 	int trainingScore = 0;
 	public void trainingRoundOver(int round, int totalTrainings, Game game) {
 		trainingScore += game.getScore();
 
 		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
-		final int GAMES_PER_TRAINING = 10;
+		final int GAMES_PER_TRAINING = 20;
 		
 		if((round+1) % GAMES_PER_TRAINING == 0) {
+			timer_training.stop();
+			
 			trainingScore /= GAMES_PER_TRAINING;
 			
+			System.out.println("");
 			System.out.println("Avg getAction    time: " + timer_total.getAvgInMs()        + "ms");
 			System.out.println("Avg prepare      time: " + timer_prepare.getAvgInMs()      + "ms");
 			System.out.println("Avg match        time: " + timer_match.getAvgInMs()        + "ms");
-			System.out.println("Avg getDirection time: " + timer_getDirection.getAvgInMs() + "ms");
+			System.out.println("Avg getDirection time: " + timer_getDirection.getAvgInMs()  + "ms");
+			System.out.println("Avg training     time: " + timer_training.getAvgInMs()/(float)GAMES_PER_TRAINING + "ms");
+			System.out.println("    training     time: " + timer_training.getAvgInMs()/1000.0f + "s");
 			
 			System.out.println("Avg score after " + GAMES_PER_TRAINING + " rounds: " + trainingScore);
+			System.out.println("");
 			FitnessSave.mutate();
+			
+			timer_training.start();
 		}
 	}
 
