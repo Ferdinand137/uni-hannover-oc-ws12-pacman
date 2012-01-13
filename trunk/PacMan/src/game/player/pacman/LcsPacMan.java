@@ -114,8 +114,10 @@ public final class LcsPacMan extends AbstractPlayer{
 			if(rule.match(game)) {
 				MoveRecommendation dir = rule.getActionDirection(game);
 				System.out.print(regelZumAusgebenNurBlub + ". rule matches: ");
-				System.out.println("getActionDirection: " + dir.direction + " @ " + dir.fitness);
-				directionCounter[dir.direction] += dir.fitness;
+				for (int i = 0; i < 4; i++) {
+					System.out.println("getActionDirection: " + i + " @ " + dir.fitness[i]);
+					directionCounter[i] += dir.fitness[i];
+				}
 			}
 		}
 		
