@@ -4,6 +4,7 @@ import game.core.Game;
 import game.player.pacman.lcs.Direction;
 import game.player.pacman.lcs.DistanceCondition;
 import game.player.pacman.lcs.EdibleCondition;
+import game.player.pacman.lcs.FitnessSave;
 import game.player.pacman.lcs.JunctionCondition;
 import game.player.pacman.lcs.MoveAction;
 import game.player.pacman.lcs.MoveRecommendation;
@@ -100,8 +101,19 @@ public final class LcsPacMan extends AbstractPlayer{
 		return "Gruppe2_PacMan";
 	}
 
+	int trainingScore = 0;
 	public void trainingRoundOver(int round, int totalTrainings, Game game) {
-		// TODO Auto-generated method stub
+		trainingScore += game.getScore();
+
+		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
+		final int GAMES_PER_TRAINING = 10;
+		
+		if((round+1) % GAMES_PER_TRAINING == 0) {
+			trainingScore /= GAMES_PER_TRAINING;
+			
+			System.out.println("Avg score after " + GAMES_PER_TRAINING + " rounds: " + trainingScore);
+			FitnessSave.mutate();
+		}
 	}
 
 	public void trainingOver(int trainings) {
