@@ -42,6 +42,6 @@ public class Rule implements Condition {
 	}
 	
 	public MoveRecommendation getActionDirection(Game game) {
-		return new MoveRecommendation(action.getDirection(game), fitness);
+		return action.getDirection(game, fitness);
 	}
 }

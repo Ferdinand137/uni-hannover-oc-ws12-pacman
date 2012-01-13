@@ -43,7 +43,7 @@ public final class LcsPacMan extends AbstractPlayer{
 
 		Rule juncTest = new Rule();
 		juncTest.add(new JunctionCondition());
-		juncTest.setAction(new MoveAction(Thing.JUNCTION));
+		juncTest.setAction(new MoveAction(Thing.JUNCTION)).setFitness(0.1f);
 		ruleSet.add(juncTest);
 		
 		/*
@@ -82,7 +82,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		ruleSet.add(rule5);
 */
 		ruleSet.add(new Rule()
-			.add(new DistanceCondition(Thing.GHOST, 0, 13.75f))
+			.add(new DistanceCondition(Thing.GHOST, 0, 50))
 			.add(new EdibleCondition(false))
 			.setAction(new MoveAction(Thing.GHOST))
 			.setFitness(-10));
@@ -135,7 +135,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		if (dir < 0) {
 			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
 		}
-		
+		System.out.println("-> laufe nach: " + dir);
 		
 		// dann nachm motto:
 		//if(test.match(game)) test.getActionDirection(game);
