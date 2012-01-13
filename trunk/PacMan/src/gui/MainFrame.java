@@ -17,6 +17,7 @@ import javax.swing.JComponent;
 import javax.swing.UIManager;
 
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class MainFrame extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = -6408345358982189571L;
@@ -30,7 +31,7 @@ public class MainFrame extends javax.swing.JFrame {
         setVisible(true);
     }
 
-    private void initComponents(JComponent component) {
+	private void initComponents(JComponent component) {
         java.awt.GridBagConstraints gridBagConstraints;
 
         comboGhosts = new javax.swing.JComboBox();
@@ -141,7 +142,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify
     private javax.swing.JComboBox comboGhosts;
-    private javax.swing.JComboBox comboPacMan;
+	private javax.swing.JComboBox comboPacMan;
     private javax.swing.JTextField trials;
     private javax.swing.JLabel labelSchritte;
     private javax.swing.JButton startButton;

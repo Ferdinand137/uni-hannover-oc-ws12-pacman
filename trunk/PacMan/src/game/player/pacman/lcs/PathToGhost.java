@@ -6,8 +6,8 @@ package game.player.pacman.lcs;
 public class PathToGhost extends Path {
 	final int ghostId;
 	
-	public PathToGhost(int ghostId, int[] path) {
-		super(path);
+	public PathToGhost(int ghostId, Path path) {
+		super(path.path);
 		this.ghostId = ghostId;
 	}
 }

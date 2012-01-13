@@ -29,7 +29,7 @@ public class RuleFunctions {
 		for (int i = 0; i < G.NUM_GHOSTS; i++) {
 			if (game.getLairTime(i) > 0)
 				continue; // ignore erstmal
-			pathsToGhosts.add(new PathToGhost(i, game.getPath(currentLocation, game.getCurGhostLoc(i))));
+			pathsToGhosts.add(new PathToGhost(i, getPath(currentLocation, game.getCurGhostLoc(i))));
 		}
 
 		closestGhost = (PathToGhost) (pathsToGhosts.isEmpty() ? null : pathsToGhosts.getShortest());
@@ -42,20 +42,30 @@ public class RuleFunctions {
 
 		// Alle aktiven Pillen als Pfad eintragen
 		for (int i = 0; i < activePills.length; i++) {
-			pathsToPill.add(new Path(game.getPath(currentLocation, activePills[i])));
+			pathsToPill.add(getPath(currentLocation, activePills[i]));
 		}
 
 		closestPill = pathsToPill.isEmpty() ? null : pathsToPill.getShortest();
 		
 		// Alle aktiven Pillen als Pfad eintragen
 		for (int i = 0; i < activePowerPills.length; i++) {
-			pathsToPowerPill.add(new Path(game.getPath(currentLocation, activePowerPills[i])));
+			pathsToPowerPill.add(getPath(currentLocation, activePowerPills[i]));
 		}
 
-		closestPowerPill = pathsToPowerPill.isEmpty() ? null : pathsToPowerPill
-				.getShortest();
+		closestPowerPill = pathsToPowerPill.isEmpty() ? null : pathsToPowerPill.getShortest();
 	}
 
+	/**
+	 * game.getPath() tut leider nicht das was es behauptet, der Zielpunkt fehlt!
+	 */
+	public static Path getPath(int from, int to) {
+		int path[] = game.getPath(from, to);
+		int fixed[] = new int[path.length+1];
+		System.arraycopy(path, 0, fixed, 0, path.length);
+		fixed[path.length] = to;
+		return new Path(fixed);
+	}
+	
 	public static int getNextGhostId() {
 		return closestGhost.ghostId;
 	}
@@ -71,10 +81,13 @@ public class RuleFunctions {
 		return getLengthOfPath(closestPowerPill);
 	}
 
-	private static int getLengthOfPath(Path closestGhost2) {
-		if(closestGhost2 == null)
+	/**
+	 * to avoid null pointer. TODO: better Path.endlessPath instead of null
+	 */
+	private static int getLengthOfPath(Path path) {
+		if(path == null)
 			return Integer.MAX_VALUE;
-		return closestGhost2.length();
+		return path.length();
 	}
 	
 	public static int getDirectionOfPath(Path path) {
