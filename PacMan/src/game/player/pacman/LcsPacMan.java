@@ -81,13 +81,11 @@ public final class LcsPacMan extends AbstractPlayer{
 		rule5.setAction(new MoveAction(Thing.PILL));
 		ruleSet.add(rule5);
 */
-		Rule rule6 = new Rule();
-		rule6.add(new DistanceCondition(Thing.GHOST, 0, 13.75f));
-		//rule6.add(new BlinkingCondition(false));
-		rule6.add(new EdibleCondition(false));
-		rule6.setAction(new MoveAction(Thing.GHOST));
-		rule6.setFitness(-10); // important rule!
-		ruleSet.add(rule6);
+		ruleSet.add(new Rule()
+			.add(new DistanceCondition(Thing.GHOST, 0, 13.75f))
+			.add(new EdibleCondition(false))
+			.setAction(new MoveAction(Thing.GHOST))
+			.setFitness(-10));
 
 		// TODO: junction ...
 		//Rule rule7 = new Rule();
