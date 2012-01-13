@@ -8,7 +8,6 @@ import game.core.Game;
 public class JunctionCondition implements Condition {
 
 	/**
-	 * TODO das total ungenau so
 	 * @return true if PacMan can reach any junction before the corresponding ghost
 	 */
 	@Override
