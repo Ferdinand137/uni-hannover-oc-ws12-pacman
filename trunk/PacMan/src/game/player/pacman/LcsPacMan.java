@@ -17,6 +17,8 @@ import java.util.Vector;
 public final class LcsPacMan extends AbstractPlayer{
 	
 	RuleFunctions ruleFunctions;
+	Vector<Rule> ruleSet = new Vector<Rule>();
+
 	static Game game;
 	 public LcsPacMan() {
 		//System.out.println("---");
@@ -24,6 +26,15 @@ public final class LcsPacMan extends AbstractPlayer{
 		System.out.println("neuer pacman");
 		//System.out.println("---");
 		//System.out.println("---");
+		
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
+		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(2.0f));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 2.5f)).add(new DistanceCondition(Thing.POWER_PILL, 0, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 5, 10)).add(new DistanceCondition(Thing.POWER_PILL, 5, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 30)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST)).setFitness(-10));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(-1));
+
 	}
 	 
 	@Override
@@ -32,16 +43,6 @@ public final class LcsPacMan extends AbstractPlayer{
 		//System.out.println("---");
 		
 		RuleFunctions.prepareNextRound(game);
-		
-		Vector<Rule> ruleSet = new Vector<Rule>();
-
-		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
-		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(2.0f));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 2.5f)).add(new DistanceCondition(Thing.POWER_PILL, 0, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 5, 10)).add(new DistanceCondition(Thing.POWER_PILL, 5, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 30)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST)).setFitness(-10));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(-1));
 
 		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3 
 		float[] directionCounter = new float[4];

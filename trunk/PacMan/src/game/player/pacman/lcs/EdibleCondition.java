@@ -16,4 +16,9 @@ public class EdibleCondition implements Condition {
 		return edible == game.isEdible(nearestGhost);
 	}
 
+	@Override
+	public String toId() {
+		// TODO Auto-generated method stub
+		return "#EC:" + (edible ? 'T' : 'F') + '#';
+	}
 }

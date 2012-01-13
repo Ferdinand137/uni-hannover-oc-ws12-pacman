@@ -33,4 +33,9 @@ public class DistanceCondition implements Condition {
 		
 		return min <= dist && dist <= max;
 	}
+
+	@Override
+	public String toId() {
+		return "#DC:" + thing.toId() + ':' + min + ':' + max + '#';
+	}
 }

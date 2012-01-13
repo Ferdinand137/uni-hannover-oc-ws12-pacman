@@ -16,4 +16,8 @@ public class BlinkingCondition implements Condition {
 		return false;
 	}
 
+	@Override
+	public String toId() {
+		return "#BC#";
+	}
 }
