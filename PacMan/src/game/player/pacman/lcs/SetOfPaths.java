@@ -40,4 +40,8 @@ public class SetOfPaths {
 		}
 		return ausgabe;
 	}
+
+	public Iterable<Path> getIterable() {
+		return paths;
+	}
 }
