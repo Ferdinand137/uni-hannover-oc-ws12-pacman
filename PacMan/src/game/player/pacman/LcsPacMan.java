@@ -1,6 +1,7 @@
 package game.player.pacman;
 
 import game.core.Game;
+import game.player.pacman.lcs.Direction;
 import game.player.pacman.lcs.DistanceCondition;
 import game.player.pacman.lcs.EdibleCondition;
 import game.player.pacman.lcs.JunctionCondition;
@@ -113,10 +114,10 @@ public final class LcsPacMan extends AbstractPlayer{
 			++regelZumAusgebenNurBlub;
 			if(rule.match(game)) {
 				MoveRecommendation dir = rule.getActionDirection(game);
-				System.out.print(regelZumAusgebenNurBlub + ". rule matches: ");
-				for (int i = 0; i < 4; i++) {
-					System.out.println("getActionDirection: " + i + " @ " + dir.fitness[i]);
-					directionCounter[i] += dir.fitness[i];
+				System.out.print(regelZumAusgebenNurBlub + ". rule matches:\n");
+				for (Direction direction : Direction.values()) {
+					System.out.println(direction + ": " + dir.fitness[direction.toInt()]);
+					directionCounter[direction.toInt()] += dir.fitness[direction.toInt()];
 				}
 			}
 		}
@@ -135,7 +136,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		if (dir < 0) {
 			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
 		}
-		System.out.println("-> laufe nach: " + dir);
+		System.out.println("-> laufe nach: " + Direction.createFromInt(dir));
 		
 		// dann nachm motto:
 		//if(test.match(game)) test.getActionDirection(game);
@@ -144,8 +145,6 @@ public final class LcsPacMan extends AbstractPlayer{
 		// erstmal zB einfache mehrheitentscheidung
 		//test.getActionDirection(game); // sollte funktionieren sobald marcus seins fertig hat
 		
-		int[] directions=game.getPossiblePacManDirs(false);
-		//return directions[G.rnd.nextInt(directions.length)];		
 		return dir;
 	}
 

@@ -27,7 +27,7 @@ public class MoveAction {
 				
 				int direction = RuleFunctions.getDirectionOfPath(path);
 				moveRecommendation.fitness[direction] = fitness; //1.0f / path.length() * fitness;
-				System.out.println(direction + " <- " + path.length() + " ::: " + path);
+				System.out.println(Direction.createFromInt(direction) + " <- " + path.length() + " ::: " + path);
 			}
 			return moveRecommendation;
 			
