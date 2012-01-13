@@ -7,8 +7,6 @@ public class RuleFunctions {
 
 	static int currentLocation;
 	static SetOfPaths pathsToGhosts;
-	static SetOfPaths pathsToPill;
-	static SetOfPaths pathsToPowerPill;
 	static PathToGhost closestGhost;
 	static Path closestPill;
 	static Path closestPowerPill;
@@ -23,8 +21,6 @@ public class RuleFunctions {
 		currentLocation = game.getCurPacManLoc();
 
 		pathsToGhosts = new SetOfPaths();
-		pathsToPill = new SetOfPaths();
-		pathsToPowerPill = new SetOfPaths();
 
 		for (int i = 0; i < G.NUM_GHOSTS; i++) {
 			if (game.getLairTime(i) > 0)
@@ -34,31 +30,17 @@ public class RuleFunctions {
 
 		closestGhost = (PathToGhost) (pathsToGhosts.isEmpty() ? null : pathsToGhosts.getShortest());
 
-		// alle aktiven Pillen holen
-		int[] activePills = game.getPillIndicesActive();
-		
-		// alle aktiven PowerPillen holen
-		int[] activePowerPills = game.getPowerPillIndicesActive();
-
-		// Alle aktiven Pillen als Pfad eintragen
-		for (int i = 0; i < activePills.length; i++) {
-			pathsToPill.add(getPath(currentLocation, activePills[i]));
-		}
-
-		closestPill = pathsToPill.isEmpty() ? null : pathsToPill.getShortest();
-		
-		// Alle aktiven Pillen als Pfad eintragen
-		for (int i = 0; i < activePowerPills.length; i++) {
-			pathsToPowerPill.add(getPath(currentLocation, activePowerPills[i]));
-		}
-
-		closestPowerPill = pathsToPowerPill.isEmpty() ? null : pathsToPowerPill.getShortest();
+		// ACHTUNG: manhattan ist NICHT schneller! PATH distances sind eine direkte Formell!
+		closestPill = getPath(currentLocation, game.getTarget(currentLocation, game.getPillIndicesActive(), true, Game.DM.PATH));
+		closestPowerPill = getPath(currentLocation, game.getTarget(currentLocation, game.getPowerPillIndicesActive(), true, Game.DM.PATH));
 	}
 
 	/**
 	 * game.getPath() tut leider nicht das was es behauptet, der Zielpunkt fehlt!
 	 */
 	public static Path getPath(int from, int to) {
+		if(from == -1 || to == -1) return Path.ENDLESS;
+		
 		int path[] = game.getPath(from, to);
 		int fixed[] = new int[path.length+1];
 		System.arraycopy(path, 0, fixed, 0, path.length);
@@ -69,6 +51,7 @@ public class RuleFunctions {
 	public static int getNextGhostId() {
 		return closestGhost.ghostId;
 	}
+
 	public static int getNextGhostDistance() {
 		return getLengthOfPath(closestGhost);
 	}
@@ -95,7 +78,7 @@ public class RuleFunctions {
 		assert path != null;
 
 		// FIXME achtung gilt nur für pacman
-		if(path.length() == 1)
+		if(path.length() == 1 || path == Path.ENDLESS)
 			return game.getCurPacManDir();
 		
 		for (int i = 0; i < 4; i++)

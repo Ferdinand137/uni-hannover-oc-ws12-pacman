@@ -3,6 +3,13 @@ package game.player.pacman.lcs;
 import game.core.Game;
 
 public class Path {
+	public static final Path ENDLESS = new Path(null) {
+		public int length() { return Integer.MAX_VALUE; }
+		public Direction getStartDirection(Game game) { throw new RuntimeException("TODO"); }
+		public boolean goesOver(int pos) { return false; } // konsequenterweise eigtl true, aber false macht mehr sinn
+		public String toString() { return "ENDLESS path"; }
+	};
+	
 	final int path[];
 	
 	public Path(int path[]) {
