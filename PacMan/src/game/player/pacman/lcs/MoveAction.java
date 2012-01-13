@@ -42,8 +42,10 @@ public class MoveAction {
 		case JUNCTION:
 
 			int[] junctions = getPacManNeighboringJunctions(game);
-
+			
 			for (Direction direction : Direction.values()) {
+
+				if(junctions[direction.toInt()] < 0) continue;
 
 				// kürzesten pfad von geist zu junction finden
 				int minGhostDist = Integer.MAX_VALUE;
@@ -55,9 +57,23 @@ public class MoveAction {
 						minGhostDist = dist;
 				}
 				
-				int minPacManDist = game.getPath(RuleFunctions.currentLocation, junctions[direction.toInt()]).length;
+				Path minPacManPath = new Path(game.getPath(RuleFunctions.currentLocation, junctions[direction.toInt()]));
 				
-				moveRecommendation.fitness[direction.toInt()] = (float)minGhostDist / (float)minPacManDist * fitness;
+				if(minPacManPath.length() < minGhostDist) {
+					// manchmal ist der geist langsamer weil pacman einfach über ihn drüberlaufen will wärend der geist nicht drehen kann
+					for(int i = 0; i < G.NUM_GHOSTS; i++) {
+						if(minPacManPath.goesOver(game.getCurGhostLoc(i))) {
+							System.out.println(direction + " <<< geist im weg!");
+							// durch nen geist laufen ist in der regel ne schlechte idee!
+							minGhostDist = 0;
+						}
+					}
+				}
+				
+				// so n pacman ist ganz schön dick, der hat nen radius! so grob 2 bis 10... ka
+				minGhostDist -= 10;
+				System.out.println(direction + ": " + minGhostDist + " / " + minPacManPath.length());
+				moveRecommendation.fitness[direction.toInt()] += (minGhostDist < minPacManPath.length()) ? -fitness : fitness;
 			}
 
 			return moveRecommendation;
@@ -78,6 +94,7 @@ public class MoveAction {
 			// nicht gegen die Wand planen!
 			if(pos == -1) {
 				System.out.println("wand: " + startDirection);
+				junctions[startDirection.toInt()] = -1;
 				continue;
 			}
 			
@@ -109,6 +126,7 @@ public class MoveAction {
 			junctions[startDirection.toInt()] = pos;
 		}
 		
+		System.out.println(junctions[0] + " - " + junctions[2] + " - " + junctions[2] + " - " + junctions[3]);
 		return junctions;
 	}
 }

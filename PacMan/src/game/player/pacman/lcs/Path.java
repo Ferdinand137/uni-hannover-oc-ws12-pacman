@@ -20,4 +20,11 @@ public class Path {
 		return ausgabe;
 	}
 
+	public boolean goesOver(int pos) {
+		for (int i : path) {
+			if(i == pos) return true;
+		}
+		return false;
+	}
+
 }

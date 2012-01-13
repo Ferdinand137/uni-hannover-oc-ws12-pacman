@@ -28,13 +28,14 @@ public final class LcsPacMan extends AbstractPlayer{
 	 
 	@Override
 	public int getAction(Game game,long timeDue){
+		System.out.println("time: " + (timeDue - System.currentTimeMillis()));
 		System.out.println("---");
 		
 		RuleFunctions.prepareNextRound(game);
 		
 		Vector<Rule> ruleSet = new Vector<Rule>();
 
-		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(0.1f));
+		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(2.0f));
 		
 		/*
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
@@ -59,12 +60,9 @@ public final class LcsPacMan extends AbstractPlayer{
 		rule4.add(new EdibleCondition(false));
 		rule4.setAction(new MoveAction(Thing.POWER_PILL));
 		ruleSet.add(rule4);
-
-		Rule rule5 = new Rule();
-//		rule5.add(new DistanceCondition(Thing.PILL, 0, 55));
-		rule5.setAction(new MoveAction(Thing.PILL));
-		ruleSet.add(rule5);
 */
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
+
 		ruleSet.add(new Rule()
 			.add(new DistanceCondition(Thing.GHOST, 0, 50))
 			.add(new EdibleCondition(false))
