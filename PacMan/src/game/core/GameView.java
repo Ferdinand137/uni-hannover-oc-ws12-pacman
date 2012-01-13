@@ -34,7 +34,7 @@ public final class GameView extends JComponent
 
 	private int MAG=2;
 	private int pacManDir=G.INITIAL_PAC_DIR;
-	private static boolean isVisible=false;
+	public static boolean isVisible=false;
 	
     private final _G_ game;
     private final BufferedImage[][] pacmanImgs=new BufferedImage[4][3];

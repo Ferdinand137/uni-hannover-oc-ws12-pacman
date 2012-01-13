@@ -140,18 +140,32 @@ public final class LcsPacMan extends AbstractPlayer{
 		timer_training.start();
 	}
 	
+	int lastAvgScore = -1;
 	int trainingScore = 0;
 	public void trainingRoundOver(int round, int totalTrainings, Game game) {
 		trainingScore += game.getScore();
 
 		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
-		final int GAMES_PER_TRAINING = 20;
+		final int GAMES_PER_TRAINING = 50;
 		
 		if((round+1) % GAMES_PER_TRAINING == 0) {
 			timer_training.stop();
 			
 			trainingScore /= GAMES_PER_TRAINING;
 			
+			System.out.println("\n\n");
+			
+			if(lastAvgScore >= 0) {
+				// TODO evtl erst berücksichtigen wenn änderung > 1%
+				if(lastAvgScore > trainingScore) {
+					System.out.println("bad mutation happened: " + lastAvgScore + " > " + trainingScore);
+					FitnessSave.revertMutation();
+				} else {
+					System.out.println("good mutation happened: " + lastAvgScore + " > " + trainingScore);
+				}
+			}
+			lastAvgScore = trainingScore;
+
 			System.out.println("");
 			System.out.println("Avg getAction    time: " + timer_total.getAvgInMs()        + "ms");
 			System.out.println("Avg prepare      time: " + timer_prepare.getAvgInMs()      + "ms");
@@ -169,7 +183,6 @@ public final class LcsPacMan extends AbstractPlayer{
 	}
 
 	public void trainingOver(int trainings) {
-		// TODO Auto-generated method stub
-		
+		FitnessSave.dump();
 	}
 }

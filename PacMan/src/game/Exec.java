@@ -162,7 +162,8 @@ public class Exec {
 			}
 
 			avgScore += gameTmp.getScore();
-			System.out.println("Training "+training+++" Punkte: "+gameTmp.getScore());
+			//System.out.println("Training "+training+++" Punkte: "+gameTmp.getScore());
+			System.out.print('.');
 			
 			if(pacManController instanceof LcsPacMan) ((LcsPacMan) pacManController).trainingRoundOver(i, trials, gameTmp);
 		}
