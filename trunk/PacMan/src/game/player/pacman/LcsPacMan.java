@@ -20,6 +20,8 @@ public final class LcsPacMan extends AbstractPlayer{
 	RuleFunctions ruleFunctions;
 	Vector<Rule> ruleSet = new Vector<Rule>();
 
+	long totalTime, totalTimeCounter;
+	
 	static Game game;
 	 public LcsPacMan() {
 		//System.out.println("---");
@@ -40,6 +42,8 @@ public final class LcsPacMan extends AbstractPlayer{
 	 
 	@Override
 	public int getAction(Game game,long timeDue){
+		long startTime = System.nanoTime();
+		
 		//System.out.println("time: " + (timeDue - System.currentTimeMillis()));
 		//System.out.println("---");
 		
@@ -93,6 +97,11 @@ public final class LcsPacMan extends AbstractPlayer{
 		// erstmal zB einfache mehrheitentscheidung
 		//test.getActionDirection(game); // sollte funktionieren sobald marcus seins fertig hat
 		
+		long endTime = System.nanoTime();
+		
+		totalTime += (endTime - startTime);
+		totalTimeCounter ++;
+
 		return dir;
 	}
 
@@ -111,6 +120,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		if((round+1) % GAMES_PER_TRAINING == 0) {
 			trainingScore /= GAMES_PER_TRAINING;
 			
+			System.out.println("Avg getAction time: " + totalTime / totalTimeCounter / 1000 / 1000.0f + "ms");
 			System.out.println("Avg score after " + GAMES_PER_TRAINING + " rounds: " + trainingScore);
 			FitnessSave.mutate();
 		}
