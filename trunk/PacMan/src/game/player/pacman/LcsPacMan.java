@@ -33,29 +33,12 @@ public final class LcsPacMan extends AbstractPlayer{
 		RuleFunctions.prepareNextRound(game);
 		
 		Vector<Rule> ruleSet = new Vector<Rule>();
-		
-//		Rule test = new Rule();
-//		test.add(new DistanceCondition(Thing.GHOST, 5, 10));
-//		test.add(new DistanceCondition(Thing.PILL, 1, 3));
-//		test.setAction(new MoveAction(Thing.GHOST, true));
-//		RuleFunctions.getNextPillDistance();
-//		RuleFunctions.getNextPowerPillDistance();
-//		conditions.add(test);
 
-		Rule juncTest = new Rule();
-		juncTest.add(new JunctionCondition());
-		juncTest.setAction(new MoveAction(Thing.JUNCTION)).setFitness(0.1f);
-		ruleSet.add(juncTest);
+		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(0.1f));
 		
 		/*
-		Rule rule1 = new Rule();
-		rule1.add(new DistanceCondition(Thing.GHOST, 0, 5));
-		rule1.add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f));
-		rule1.add(new EdibleCondition(false));
-		rule1.setAction(new MoveAction(Thing.POWER_PILL));
-		ruleSet.add(rule1);
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
 
-		// TODO: was ist der Unterschied zwischen "not edible" und "ungleich edible"??? 
 //		Rule rule2 = new Rule();
 //		rule2.add(new DistanceCondition(Thing.GHOST, 0, 2.5f));
 //		rule2.add(new DistanceCondition(Thing.POWER_PILL, 0, 10));
@@ -88,8 +71,6 @@ public final class LcsPacMan extends AbstractPlayer{
 			.setAction(new MoveAction(Thing.GHOST))
 			.setFitness(-10));
 
-		// TODO: junction ...
-		//Rule rule7 = new Rule();
 		/*
 		Rule rule8 = new Rule();
 		rule8.add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f));

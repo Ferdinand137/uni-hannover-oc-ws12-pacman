@@ -40,69 +40,26 @@ public class MoveAction {
 			return moveRecommendation;
 			
 		case JUNCTION:
-			for(int startDirection = 0; startDirection < 4; startDirection++) {
-				
-				int pos = game.getPacManNeighbours()[startDirection];
-				// nicht gegen die Wand planen!
-				if(pos == -1) {
-					System.out.println("wand: " + startDirection);
-					continue;
-				}
-				
-				int currentDirection = startDirection;
 
-				while(true) {
-					int newPos = game.getNeighbour(pos, currentDirection);
-					
-					if(newPos < 0) {
-						// hups da ist ne wand. abbiegen!
-						for(int newDirection = 0; newDirection < 4; newDirection++) {
-							newPos = game.getNeighbour(pos, newDirection);
-							if(newPos != pos && newPos >= 0) {
-								// ausweg gefunden
-								System.out.println("biege ab: " + currentDirection + " -> " + newDirection);
-								currentDirection = newDirection;
-								break;
-							}
-						}
-					}
-					
-					if(game.isJunction(newPos))
-						break;
-					
-					pos = newPos;
-				}
-				// pos is junction
+			int[] junctions = getPacManNeighboringJunctions(game);
+
+			for (Direction direction : Direction.values()) {
 
 				// kürzesten pfad von geist zu junction finden
 				int minGhostDist = Integer.MAX_VALUE;
 				for(int ghostId = 0; ghostId < G.NUM_GHOSTS; ghostId++) {
 					if(game.getLairTime(ghostId) > 0) continue;
 					
-					int dist = game.getGhostPathDistance(ghostId, pos);
+					int dist = game.getGhostPathDistance(ghostId, junctions[direction.toInt()]);
 					if(dist < minGhostDist)
 						minGhostDist = dist;
 				}
 				
-				int minPacManDist = game.getPath(RuleFunctions.currentLocation, pos).length;
+				int minPacManDist = game.getPath(RuleFunctions.currentLocation, junctions[direction.toInt()]).length;
 				
-				moveRecommendation.fitness[startDirection] = (float)minGhostDist / (float)minPacManDist * fitness;
+				moveRecommendation.fitness[direction.toInt()] = (float)minGhostDist / (float)minPacManDist * fitness;
 			}
-			/*
-			// TODO junctions berücksichtigen die nicht aufm weg zu einem geist liegen
-			for (Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
-				for(int posInPath = 1; posInPath < path.length() / 2; posInPath++) {
-					if(game.isJunction(path.path[posInPath])) {
-						// found junction!
-						// PacMAn kommt vorm Geist an!
-						// TODO berücksichtigen dass geist sich nicht drehen kann
-						// route vom geist aus planen?
-						moveRecommendation.fitness[RuleFunctions.getDirectionOfPath(path)] = 1.0f / posInPath * fitness;
-						break; // next ghost
-					}
-				}
-			}
-			*/
+
 			return moveRecommendation;
 			
 		default:
@@ -110,5 +67,48 @@ public class MoveAction {
 		}
 		
 		
+	}
+
+
+	private int[] getPacManNeighboringJunctions(Game game) {
+		int[] junctions = new int[4];
+		
+		for (Direction startDirection : Direction.values()) {
+			int pos = game.getPacManNeighbours()[startDirection.toInt()];
+			// nicht gegen die Wand planen!
+			if(pos == -1) {
+				System.out.println("wand: " + startDirection);
+				continue;
+			}
+			
+			Direction currentDirection = startDirection;
+
+			while(true) {
+				int newPos = game.getNeighbour(pos, currentDirection.toInt());
+				
+				if(newPos < 0) {
+					// hups da ist ne wand. abbiegen!
+					for (Direction newDirection : Direction.values()) {
+						newPos = game.getNeighbour(pos, newDirection.toInt());
+						if(newPos != pos && newPos >= 0) {
+							// ausweg gefunden
+							System.out.println("biege ab: " + currentDirection + " -> " + newDirection);
+							currentDirection = newDirection;
+							break;
+						}
+					}
+				}
+				
+				if(game.isJunction(newPos))
+					break;
+				
+				pos = newPos;
+			}
+			// pos is junction
+
+			junctions[startDirection.toInt()] = pos;
+		}
+		
+		return junctions;
 	}
 }
