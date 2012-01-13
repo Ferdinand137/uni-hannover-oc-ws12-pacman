@@ -3,6 +3,7 @@ package game.player.pacman;
 import game.core.Game;
 import game.player.pacman.lcs.DistanceCondition;
 import game.player.pacman.lcs.EdibleCondition;
+import game.player.pacman.lcs.JunctionCondition;
 import game.player.pacman.lcs.MoveAction;
 import game.player.pacman.lcs.MoveRecommendation;
 import game.player.pacman.lcs.Rule;
@@ -40,6 +41,12 @@ public final class LcsPacMan extends AbstractPlayer{
 //		RuleFunctions.getNextPowerPillDistance();
 //		conditions.add(test);
 
+		Rule juncTest = new Rule();
+		juncTest.add(new JunctionCondition());
+		juncTest.setAction(new MoveAction(Thing.JUNCTION));
+		ruleSet.add(juncTest);
+		
+		/*
 		Rule rule1 = new Rule();
 		rule1.add(new DistanceCondition(Thing.GHOST, 0, 5));
 		rule1.add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f));
@@ -60,20 +67,20 @@ public final class LcsPacMan extends AbstractPlayer{
 		rule3.add(new EdibleCondition(false));
 		rule3.setAction(new MoveAction(Thing.GHOST, true));
 		ruleSet.add(rule3);
-*/
+*
 		
 		Rule rule4 = new Rule();
 		rule4.add(new DistanceCondition(Thing.GHOST, 5, 10));
 		rule4.add(new DistanceCondition(Thing.POWER_PILL, 5, 10));
 		rule4.add(new EdibleCondition(false));
-		rule4.setAction(new MoveAction(Thing.PILL));
+		rule4.setAction(new MoveAction(Thing.POWER_PILL));
 		ruleSet.add(rule4);
 
 		Rule rule5 = new Rule();
 //		rule5.add(new DistanceCondition(Thing.PILL, 0, 55));
 		rule5.setAction(new MoveAction(Thing.PILL));
 		ruleSet.add(rule5);
-
+*/
 		Rule rule6 = new Rule();
 		rule6.add(new DistanceCondition(Thing.GHOST, 0, 13.75f));
 		//rule6.add(new BlinkingCondition(false));

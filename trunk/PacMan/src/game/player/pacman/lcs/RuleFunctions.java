@@ -77,7 +77,7 @@ public class RuleFunctions {
 		return closestGhost2.length();
 	}
 	
-	private static int getDirectionOfPath(Path path) {
+	public static int getDirectionOfPath(Path path) {
 		// FIXME Achtung völlig ungetestet! 0 plan obs stimmt
 		assert path != null;
 
@@ -102,5 +102,9 @@ public class RuleFunctions {
 
 	public static int getNextPowerPillDirection() {
 		return getDirectionOfPath(closestPowerPill);
+	}
+	
+	public static SetOfPaths getAllGhostPaths() {
+		return pathsToGhosts;
 	}
 }
