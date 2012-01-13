@@ -176,4 +176,8 @@ public class MoveAction {
 		System.out.println(junctions[0] + " - " + junctions[2] + " - " + junctions[2] + " - " + junctions[3]);
 		return junctions;
 	}
+	
+	String toId() {
+		return "#MA:" + thing.toId() + "#";
+	}
 }

@@ -25,4 +25,8 @@ public class JunctionCondition implements Condition {
 		return false;
 	}
 
+	@Override
+	public String toId() {
+		return "#JC#";
+	}
 }
