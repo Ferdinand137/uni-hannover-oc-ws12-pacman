@@ -14,16 +14,11 @@ public class JunctionCondition implements Condition {
 	@Override
 	public boolean match(Game game) {
 		for (Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
-			for(int posInPath = 0; posInPath < path.length(); posInPath++) {
+			for(int posInPath = 1; posInPath < path.length() / 2; posInPath++) {
 				if(game.isJunction(path.path[posInPath])) {
 					// found junction!
-					if(posInPath < path.length()) {
-						// PacMAn kommt vorm Geist an!
-						return true;
-					}
-					
-					// next ghost
-					break;
+					// PacMAn kommt vorm Geist an!
+					return true;
 				}
 			}
 		}

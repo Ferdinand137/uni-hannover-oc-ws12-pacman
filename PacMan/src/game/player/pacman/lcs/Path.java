@@ -10,4 +10,14 @@ public class Path {
 	public int length() {
 		return path.length;
 	}
+	
+
+	public String toString() {
+		String ausgabe = length() + ": ";
+		for (int i : path) {
+			ausgabe += i + ", ";
+		}
+		return ausgabe;
+	}
+
 }

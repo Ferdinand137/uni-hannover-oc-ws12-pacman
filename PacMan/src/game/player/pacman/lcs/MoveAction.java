@@ -1,6 +1,9 @@
 package game.player.pacman.lcs;
 
 import game.core.Game;
+import game.core.GameView;
+
+import java.awt.Color;
 
 public class MoveAction {
 	Thing thing;
@@ -13,36 +16,49 @@ public class MoveAction {
 	}
 
 
-	int getDirection(Game game) {
+	MoveRecommendation getDirection(Game game, float fitness) {
+		MoveRecommendation moveRecommendation = new MoveRecommendation();
+		
 		switch (thing) {
 		case GHOST:
-			return RuleFunctions.getNextGhostDirection();
-		case PILL:
-			return RuleFunctions.getNextPillDirection();
-		case POWER_PILL:
-			return RuleFunctions.getNextPowerPillDirection();
-		case JUNCTION:
 			for (Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
-				for(int posInPath = 0; posInPath < path.length(); posInPath++) {
+				GameView.addPoints(game, Color.CYAN, path.path);
+				
+				int direction = RuleFunctions.getDirectionOfPath(path);
+				moveRecommendation.fitness[direction] = fitness; //1.0f / path.length() * fitness;
+				System.out.println(direction + " <- " + path.length() + " ::: " + path);
+			}
+			return moveRecommendation;
+			
+		case PILL:
+			moveRecommendation.fitness[RuleFunctions.getNextPillDirection()] = fitness;
+			return moveRecommendation;
+			
+		case POWER_PILL:
+			moveRecommendation.fitness[RuleFunctions.getNextPowerPillDirection()] = fitness;
+			return moveRecommendation;
+			
+		case JUNCTION:
+			// TODO junctions berücksichtigen die nicht aufm weg zu einem geist liegen
+			for (Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
+				for(int posInPath = 1; posInPath < path.length() / 2; posInPath++) {
 					if(game.isJunction(path.path[posInPath])) {
 						// found junction!
-						if(posInPath < path.length()) {
-							// PacMAn kommt vorm Geist an!
-							// TODO berücksichtigen dass geist sich nicht drehen kann
-							// route vom geist aus planen?
-							return RuleFunctions.getDirectionOfPath(path);
-						}
-						
-						// next ghost
-						break;
+						// PacMAn kommt vorm Geist an!
+						// TODO berücksichtigen dass geist sich nicht drehen kann
+						// route vom geist aus planen?
+						moveRecommendation.fitness[RuleFunctions.getDirectionOfPath(path)] = 1.0f / posInPath * fitness;
+						break; // next ghost
 					}
 				}
 			}
 			
-			System.out.println("alles verloren! kein ausweg");
-			return 0; // gibt keine sichere richtung, alles egal
+			return moveRecommendation;
+			
 		default:
 			throw new RuntimeException("this never ever happens... but there is an uninitialized direction error without this");
 		}
+		
+		
 	}
 }
