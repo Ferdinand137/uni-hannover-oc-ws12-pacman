@@ -146,7 +146,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		trainingScore += game.getScore();
 
 		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
-		final int GAMES_PER_TRAINING = 50;
+		final int GAMES_PER_TRAINING = 100;
 		
 		if((round+1) % GAMES_PER_TRAINING == 0) {
 			timer_training.stop();
@@ -162,9 +162,11 @@ public final class LcsPacMan extends AbstractPlayer{
 					FitnessSave.revertMutation();
 				} else {
 					System.out.println("good mutation happened: " + lastAvgScore + " > " + trainingScore);
+					lastAvgScore = trainingScore;
 				}
-			}
-			lastAvgScore = trainingScore;
+			} else
+				lastAvgScore = trainingScore;
+
 
 			System.out.println("");
 			System.out.println("Avg getAction    time: " + timer_total.getAvgInMs()        + "ms");
@@ -175,6 +177,7 @@ public final class LcsPacMan extends AbstractPlayer{
 			System.out.println("    training     time: " + timer_training.getAvgInMs()/1000.0f + "s");
 			
 			System.out.println("Avg score after " + GAMES_PER_TRAINING + " rounds: " + trainingScore);
+			System.out.println("Training " + (round * 100.0f / totalTrainings) + "% complete");
 			System.out.println("");
 			FitnessSave.mutate();
 			
