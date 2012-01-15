@@ -15,7 +15,7 @@ public class RuleFunctions {
 
 	private RuleFunctions() {}
 
-	public static void prepareNextRound(Game game) {
+	public static void prepareNextRound(final Game game) {
 		RuleFunctions.game = game;
 
 		currentLocation = game.getCurPacManLoc();
@@ -24,7 +24,9 @@ public class RuleFunctions {
 
 		for (int i = 0; i < G.NUM_GHOSTS; i++) {
 			if (game.getLairTime(i) > 0)
+			 {
 				continue; // ignore erstmal
+			}
 			pathsToGhosts.add(new PathToGhost(i, getPath(currentLocation, game.getCurGhostLoc(i))));
 		}
 
@@ -38,16 +40,16 @@ public class RuleFunctions {
 	/**
 	 * game.getPath() tut leider nicht das was es behauptet, der Zielpunkt fehlt!
 	 */
-	public static Path getPath(int from, int to) {
+	public static Path getPath(final int from, final int to) {
 		if(from == -1 || to == -1) return Path.ENDLESS;
-		
-		int path[] = game.getPath(from, to);
-		int fixed[] = new int[path.length+1];
+
+		final int path[] = game.getPath(from, to);
+		final int fixed[] = new int[path.length+1];
 		System.arraycopy(path, 0, fixed, 0, path.length);
 		fixed[path.length] = to;
 		return new Path(fixed);
 	}
-	
+
 	public static int getNextGhostId() {
 		return closestGhost.ghostId;
 	}
@@ -67,39 +69,40 @@ public class RuleFunctions {
 	/**
 	 * to avoid null pointer. TODO: better Path.endlessPath instead of null
 	 */
-	private static int getLengthOfPath(Path path) {
+	private static int getLengthOfPath(final Path path) {
 		if(path == null)
 			return Integer.MAX_VALUE;
 		return path.length();
 	}
-	
-	public static int getDirectionOfPath(Path path) {
+
+	public static Direction getDirectionOfPath(final Path path) {
 		// FIXME Achtung völlig ungetestet! 0 plan obs stimmt
 		assert path != null;
 
 		// FIXME achtung gilt nur für pacman
 		if(path.length() == 1 || path == Path.ENDLESS)
-			return game.getCurPacManDir();
-		
-		for (int i = 0; i < 4; i++)
-			if (game.getNeighbour(currentLocation, i) == path.path[1])
-				return i;
+			return Direction.createFromInt(game.getCurPacManDir());
+
+		for (final Direction direction : Direction.values()) {
+			if (game.getNeighbour(currentLocation, direction.toInt()) == path.path[1])
+				return direction;
+		}
 
 		throw new RuntimeException("Weg zum führt nicht über Nachbarzelle");
 	}
-	
-	public static int getNextGhostDirection() {
+
+	public static Direction getNextGhostDirection() {
 		return getDirectionOfPath(closestGhost);
 	}
 
-	public static int getNextPillDirection() {
+	public static Direction getNextPillDirection() {
 		return getDirectionOfPath(closestPill);
 	}
 
-	public static int getNextPowerPillDirection() {
+	public static Direction getNextPowerPillDirection() {
 		return getDirectionOfPath(closestPowerPill);
 	}
-	
+
 	public static SetOfPaths getAllGhostPaths() {
 		return pathsToGhosts;
 	}

@@ -6,16 +6,20 @@ import java.util.Random;
 public class FitnessSave {
 	static HashMap<String, Float> fitness = new HashMap<String, Float>();
 	static Random random = new Random();
-	
+
 	static String lastMutationId = null;
 	static float lastPreMutationValue;
-	
-	static void set(String id, float value) {
+
+	static void set(final String id, float value) {
+		if(value <= 0) {
+			System.out.println("WARNING: Fitness < 0 --> Fitness = 0");
+			value = 0;
+		}
 		System.out.println("new fitness for " + id + "   " + get(id) + " -> " + value);
 		fitness.put(id, value);
 	}
-	
-	static float get(String id) {
+
+	static float get(final String id) {
 		// add all values to storage. this is required for mutation!
 		if(!fitness.containsKey(id)) {
 			System.out.println("default fitness init for previously unused rule: " + id);
@@ -26,11 +30,11 @@ public class FitnessSave {
 	}
 
 	public static void mutate() {
-		int randomId = random.nextInt(fitness.size());
+		final int randomId = random.nextInt(fitness.size());
 		lastMutationId = (String) fitness.keySet().toArray()[randomId];
 		float value = get(lastMutationId);
 		lastPreMutationValue = value;
-		
+
 		switch(random.nextInt(4)) {
 		case 0: value -= 0.5f; break;
 		case 1: value -= 0.1f; break;
@@ -38,10 +42,10 @@ public class FitnessSave {
 		case 3: value += 0.5f; break;
 		default: throw new RuntimeException("invalid random case");
 		}
-		
+
 		set(lastMutationId, value);
 	}
-	
+
 	public static void revertMutation() {
 		set(lastMutationId, lastPreMutationValue);
 	}
