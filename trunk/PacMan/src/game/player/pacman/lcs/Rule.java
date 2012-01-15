@@ -47,7 +47,7 @@ public class Rule implements Condition {
 	}
 
 	public MoveRecommendation generateMove(final Game game) {
-		final float fitness = FitnessSave.get(toId());
+		final float fitness = getFitness();
 		move = action.getMove(game, fitness);
 		return move;
 	}
@@ -64,5 +64,32 @@ public class Rule implements Condition {
 		}
 		r += action.toId();
 		return r;
+	}
+
+
+	@Override
+	public String toString() {
+		String r = "RULE: If";
+
+		boolean first = true;
+		if(conditions.size() > 0) {
+			for (final Condition c : conditions) {
+				if(first) {
+					first = false;
+				} else {
+					r += " and";
+				}
+				r += " (" + c.toString() + ")";
+			}
+		} else {
+			r += " (true)";
+		}
+		r += " then " + action.toString();
+		r += " with fitness " + Math.round(getFitness()*10)/10.0f;
+		return r;
+	}
+
+	public float getFitness() {
+		return FitnessSave.get(toId());
 	}
 }

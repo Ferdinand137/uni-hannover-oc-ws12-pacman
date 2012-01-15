@@ -63,13 +63,12 @@ public class MoveRecommendation {
 			}
 		}
 
-		System.out.print(this);
-
 		// we need fitness 30 to win over fitness 10 in more than 75% of all cases
 		// so lets try 30*30=900 vs 10*10=100 -> 88%
-		for (int i = 0; i < 4; i++) {
-			fitnessArr[i] = fitnessArr[i] * fitnessArr[i];
-		}
+		// for (int i = 0; i < 4; i++) {
+		//	fitnessArr[i] = fitnessArr[i] * fitnessArr[i];
+		// }
+		// BUG -unendlich * -unendlich = unendlich!
 
 
 
@@ -87,7 +86,14 @@ public class MoveRecommendation {
 				break;
 			}
 		}
-		assert randomFloat < 0;
+		if(randomFloat >= 0) {
+			System.err.println("0: " + fitnessArr[0]);
+			System.err.println("1: " + fitnessArr[1]);
+			System.err.println("2: " + fitnessArr[2]);
+			System.err.println("3: " + fitnessArr[3]);
+			System.err.println("randomFloat: " + randomFloat);
+			assert false;
+		}
 
 		if (dir < 0) {
 			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
@@ -104,5 +110,9 @@ public class MoveRecommendation {
 		fitnessArr[1] += move.fitnessArr[1];
 		fitnessArr[2] += move.fitnessArr[2];
 		fitnessArr[3] += move.fitnessArr[3];
+	}
+
+	public float getFitness(final Direction dir) {
+		return fitnessArr[dir.toInt()];
 	}
 }

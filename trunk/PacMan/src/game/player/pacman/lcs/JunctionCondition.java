@@ -11,22 +11,26 @@ public class JunctionCondition implements Condition {
 	 * @return true if PacMan can reach any junction before the corresponding ghost
 	 */
 	@Override
-	public boolean match(Game game) {
-		for (Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
+	public boolean match(final Game game) {
+		for (final Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
 			for(int posInPath = 1; posInPath < path.length() / 2; posInPath++) {
-				if(game.isJunction(path.path[posInPath])) {
+				if(game.isJunction(path.path[posInPath]))
 					// found junction!
 					// PacMAn kommt vorm Geist an!
 					return true;
-				}
 			}
 		}
-		
+
 		return false;
 	}
 
 	@Override
 	public String toId() {
 		return "#JC#";
+	}
+
+	@Override
+	public String toString() {
+		return "junction";
 	}
 }
