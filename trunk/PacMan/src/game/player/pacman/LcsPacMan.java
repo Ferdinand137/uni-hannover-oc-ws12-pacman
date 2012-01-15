@@ -13,7 +13,6 @@ import game.player.pacman.lcs.RuleFunctions;
 import game.player.pacman.lcs.Thing;
 import gui.AbstractPlayer;
 
-import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -37,7 +36,6 @@ class Timer {
 }
 public final class LcsPacMan extends AbstractPlayer{
 
-	RuleFunctions ruleFunctions;
 	Vector<Rule> ruleSet = new Vector<Rule>();
 
 	Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer(), timer_training = new Timer();
@@ -84,60 +82,25 @@ public final class LcsPacMan extends AbstractPlayer{
 		//float[] direction_weight = new float[4];
 
 //		int regelZumAusgebenNurBlub = 0;
+
+		final MoveRecommendation move = new MoveRecommendation();
 		for (final Rule rule : ruleSet) {
 //			++regelZumAusgebenNurBlub;
 
 			timer_match.start();
-			if(rule.match(game)) {
-				timer_match.stop();
+			final boolean match = rule.match(game);
+			timer_match.stop();
 
+			if(match) {
 				timer_getDirection.start();
-				final MoveRecommendation dir = rule.getActionDirection(game);
+				final MoveRecommendation ruleMove = rule.generateMove(game);
+				move.addFitness(ruleMove);
 				timer_getDirection.stop();
-
-				//System.out.print(regelZumAusgebenNurBlub + ". rule matches:\n");
-				for (final Direction direction : Direction.values()) {
-					//System.out.println(direction + ": " + dir.fitness[direction.toInt()]);
-					// FIXME was passiiert wenns NEGATIVE_INFINITY war?
-					fitnessPerDirection[direction.toInt()] += dir.fitness[direction.toInt()];
-				}
-			} else {
-				timer_match.stop();
 			}
 		}
 
-		// choose random direction according to fitness
-		System.out.println(fitnessPerDirection[0] + " // "
-						 + fitnessPerDirection[1] + " // "
-						 + fitnessPerDirection[2] + " // "
-						 + fitnessPerDirection[3]);
-		int dir = -1;
-		{
-			float totalFitness = 0;
-			for (int i = 0; i < 4; i++) {
-				if(fitnessPerDirection[i] != Float.NEGATIVE_INFINITY) {
-					totalFitness += fitnessPerDirection[i];
-				}
-			}
-			float randomFloat = new Random().nextFloat() * totalFitness;
-
-			for (int i = 0; i < 4; i++) {
-				if(fitnessPerDirection[i] == Float.NEGATIVE_INFINITY) {
-					// da ist wohl ne wand!
-					continue;
-				}
-
-				randomFloat -= fitnessPerDirection[i];
-				if (randomFloat < 0) {
-					dir = i;
-					break;
-				}
-			}
-			if (dir < 0) {
-				System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
-			}
-		}
-		System.out.println("-> laufe nach: " + Direction.createFromInt(dir));
+		final Direction dir = move.getRouletteFitness();
+		System.out.println("-> laufe nach: " + dir);
 
 		// dann nachm motto:
 		//if(test.match(game)) test.getActionDirection(game);
@@ -147,7 +110,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		//test.getActionDirection(game); // sollte funktionieren sobald marcus seins fertig hat
 		timer_total.stop();
 
-		return dir;
+		return dir.toInt();
 	}
 
 	@Override
