@@ -34,6 +34,12 @@ public class MoveAction {
 			for (final Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
 				GameView.addPoints(game, Color.CYAN, path.path);
 
+				// geister weit weg ignorieren
+				// TODO 60... tjoa... hab ich ma so reingetan :)
+				if(path.length() > 60) {
+					continue;
+				}
+
 				final Direction direction = RuleFunctions.getDirectionOfPath(path);
 
 				move.addFitness(direction, fitness, moveAway);
@@ -123,7 +129,7 @@ public class MoveAction {
 					//System.out.println("good");
 					//moveRecommendation.fitnessArr[direction] =+ fitness;
 					move.addFitness(direction, fitness, false);
-					System.out.println("junction " + direction + " ist pacman näher. werte auf. " + minGhostDist + " vs " + pacManPath.length());
+					// System.out.println("junction " + direction + " ist pacman näher. werte auf. " + minGhostDist + " vs " + pacManPath.length());
 				}
 
 				GameView.addLines(game, minGhostDist < pacManPath.length() ? Color.RED : Color.GREEN, RuleFunctions.currentLocation, junction);
@@ -203,5 +209,10 @@ public class MoveAction {
 
 	String toId() {
 		return "#MA:" + thing.toId() + "#";
+	}
+
+	@Override
+	public String toString() {
+		return "Move " + (moveAway ? "away from " : "towards ") + thing.toString();
 	}
 }

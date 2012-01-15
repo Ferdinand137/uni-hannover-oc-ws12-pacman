@@ -11,13 +11,14 @@ public class FitnessSave {
 	static float lastPreMutationValue;
 
 	static void set(final String id, float value) {
-		assert value > 0.05f; // nur fürn moment, später rausnehmen!
-
 		if(value <= 0) {
-			System.out.println("WARNING: Fitness < 0 --> Fitness = 0");
+			System.err.println("WARNING: Fitness < 0 --> Fitness = 0");
 			value = 0;
 		}
-		System.out.println("new fitness for " + id + "   " + get(id) + " -> " + value);
+
+		//if(Math.abs(get(id) - value) > 1) {
+			//System.out.println("new fitness for " + id + "   " + get(id) + " -> " + value);
+		//}
 		fitness.put(id, value);
 	}
 
@@ -25,7 +26,7 @@ public class FitnessSave {
 		// add all values to storage. this is required for mutation!
 		if(!fitness.containsKey(id)) {
 			System.out.println("default fitness init for previously unused rule: " + id);
-			fitness.put(id, 1.0f);
+			fitness.put(id, 20.0f);
 		}
 
 		return fitness.get(id);
