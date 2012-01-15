@@ -36,12 +36,11 @@ class Timer {
 }
 public final class LcsPacMan extends AbstractPlayer{
 
-	Vector<Rule> ruleSet = new Vector<Rule>();
+	final Vector<Rule> ruleSet = new Vector<Rule>();
 
-	Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer(), timer_training = new Timer();
+	final Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer(), timer_training = new Timer();
 
-	static Game game;
-	 public LcsPacMan() {
+	public LcsPacMan() {
 		//System.out.println("---");
 		//System.out.println("---");
 		System.out.println("neuer pacman");
@@ -53,9 +52,11 @@ public final class LcsPacMan extends AbstractPlayer{
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 2.5f)).add(new DistanceCondition(Thing.POWER_PILL, 0, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 5, 10)).add(new DistanceCondition(Thing.POWER_PILL, 5, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 30)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST)).setFitness(-10));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(-1));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST, true)).setFitness(10.0f));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f)).setAction(new MoveAction(Thing.POWER_PILL, true)));
 
+		// junction rule on steroids
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 50)).add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(5.0f));
 	}
 
 	@Override
@@ -67,16 +68,6 @@ public final class LcsPacMan extends AbstractPlayer{
 
 		timer_prepare.start();
 		RuleFunctions.prepareNextRound(game);
-
-		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3
-		final float[] fitnessPerDirection = new float[4];
-
-		for(int i = 0; i < 4; i++) {
-			if(game.getNeighbour(game.getCurPacManLoc(), i) == -1) {
-				// in die richtung ist ne wand!
-				fitnessPerDirection[i] = Float.NEGATIVE_INFINITY;
-			}
-		}
 		timer_prepare.stop();
 
 		//float[] direction_weight = new float[4];
@@ -100,7 +91,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		}
 
 		final Direction dir = move.getRouletteFitness();
-		System.out.println("-> laufe nach: " + dir);
+		System.out.println(" -> laufe nach: " + dir);
 
 		// dann nachm motto:
 		//if(test.match(game)) test.getActionDirection(game);
