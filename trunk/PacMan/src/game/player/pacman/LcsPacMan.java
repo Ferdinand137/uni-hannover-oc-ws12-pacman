@@ -13,6 +13,7 @@ import game.player.pacman.lcs.RuleFunctions;
 import game.player.pacman.lcs.Thing;
 import gui.AbstractPlayer;
 
+import java.util.Random;
 import java.util.Vector;
 
 /**
@@ -20,27 +21,27 @@ import java.util.Vector;
  */
 class Timer {
 	private long time, counter, start;
-	
+
 	void start() {
 		start = System.nanoTime();
 	}
-	
+
 	void stop() {
-		time += (System.nanoTime() - start);
+		time += System.nanoTime() - start;
 		counter++;
 	}
-	
+
 	float getAvgInMs() {
 		return time / counter / 1000 / 1000.0f;
 	}
 }
 public final class LcsPacMan extends AbstractPlayer{
-	
+
 	RuleFunctions ruleFunctions;
 	Vector<Rule> ruleSet = new Vector<Rule>();
 
 	Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer(), timer_training = new Timer();
-	
+
 	static Game game;
 	 public LcsPacMan() {
 		//System.out.println("---");
@@ -48,7 +49,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		System.out.println("neuer pacman");
 		//System.out.println("---");
 		//System.out.println("---");
-		
+
 		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
 		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(2.0f));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
@@ -58,68 +59,86 @@ public final class LcsPacMan extends AbstractPlayer{
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(-1));
 
 	}
-	 
+
 	@Override
-	public int getAction(Game game,long timeDue){
+	public int getAction(final Game game,final long timeDue){
 		timer_total.start();
-		
+
 		//System.out.println("time: " + (timeDue - System.currentTimeMillis()));
 		//System.out.println("---");
-		
+
 		timer_prepare.start();
 		RuleFunctions.prepareNextRound(game);
 
-		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3 
-		float[] directionCounter = new float[4];
-		
+		// #UP=0, #RIGHT=1, #DOWN=2, #LEFT=3
+		final float[] fitnessPerDirection = new float[4];
+
 		for(int i = 0; i < 4; i++) {
 			if(game.getNeighbour(game.getCurPacManLoc(), i) == -1) {
 				// in die richtung ist ne wand!
-				directionCounter[i] = Float.NEGATIVE_INFINITY;
+				fitnessPerDirection[i] = Float.NEGATIVE_INFINITY;
 			}
 		}
 		timer_prepare.stop();
-		
+
 		//float[] direction_weight = new float[4];
-		
+
 //		int regelZumAusgebenNurBlub = 0;
-		for (Rule rule : ruleSet) {
+		for (final Rule rule : ruleSet) {
 //			++regelZumAusgebenNurBlub;
-			
+
 			timer_match.start();
 			if(rule.match(game)) {
 				timer_match.stop();
-				
+
 				timer_getDirection.start();
-				MoveRecommendation dir = rule.getActionDirection(game);
+				final MoveRecommendation dir = rule.getActionDirection(game);
 				timer_getDirection.stop();
-				
+
 				//System.out.print(regelZumAusgebenNurBlub + ". rule matches:\n");
-				for (Direction direction : Direction.values()) {
+				for (final Direction direction : Direction.values()) {
 					//System.out.println(direction + ": " + dir.fitness[direction.toInt()]);
-					directionCounter[direction.toInt()] += dir.fitness[direction.toInt()];
+					// FIXME was passiiert wenns NEGATIVE_INFINITY war?
+					fitnessPerDirection[direction.toInt()] += dir.fitness[direction.toInt()];
 				}
 			} else {
 				timer_match.stop();
 			}
 		}
-		
-		int dir = -1;
-		float maxDirCount = Float.NEGATIVE_INFINITY;
-		for (int i = 0; i < 4; i++) {
-			// TODO: Entscheidungsregel, wenn zwei oder mehr Richtungen
-			// gleichhaeufig vorkommen
-			if (directionCounter[i] > maxDirCount) {
-				dir = i;
-				maxDirCount = directionCounter[i];
-			}
 
+		// choose random direction according to fitness
+		System.out.println(fitnessPerDirection[0] + " // "
+						 + fitnessPerDirection[1] + " // "
+						 + fitnessPerDirection[2] + " // "
+						 + fitnessPerDirection[3]);
+		int dir = -1;
+		{
+			float totalFitness = 0;
+			for (int i = 0; i < 4; i++) {
+				if(fitnessPerDirection[i] != Float.NEGATIVE_INFINITY) {
+					totalFitness += fitnessPerDirection[i];
+				}
+			}
+			float randomFloat = new Random().nextFloat() * totalFitness;
+
+			for (int i = 0; i < 4; i++) {
+				if(fitnessPerDirection[i] == Float.NEGATIVE_INFINITY) {
+					// da ist wohl ne wand!
+					continue;
+				}
+
+				randomFloat -= fitnessPerDirection[i];
+				if (randomFloat < 0) {
+					dir = i;
+					break;
+				}
+			}
+			if (dir < 0) {
+				System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
+			}
 		}
-		if (dir < 0) {
-			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
-		}
-		//System.out.println("-> laufe nach: " + Direction.createFromInt(dir));
-		
+		System.out.println("-> laufe nach: " + Direction.createFromInt(dir));
+
 		// dann nachm motto:
 		//if(test.match(game)) test.getActionDirection(game);
 		// TODO aus conditions alle raussuchen wo match true
@@ -127,7 +146,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		// erstmal zB einfache mehrheitentscheidung
 		//test.getActionDirection(game); // sollte funktionieren sobald marcus seins fertig hat
 		timer_total.stop();
-		
+
 		return dir;
 	}
 
@@ -136,25 +155,25 @@ public final class LcsPacMan extends AbstractPlayer{
 		return "Gruppe2_PacMan";
 	}
 
-	public void trainingBegin(int totalTrainings) {
+	public void trainingBegin(final int totalTrainings) {
 		timer_training.start();
 	}
-	
+
 	int lastAvgScore = -1;
 	int trainingScore = 0;
-	public void trainingRoundOver(int round, int totalTrainings, Game game) {
+	public void trainingRoundOver(final int round, final int totalTrainings, final Game game) {
 		trainingScore += game.getScore();
 
 		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
 		final int GAMES_PER_TRAINING = 100;
-		
+
 		if((round+1) % GAMES_PER_TRAINING == 0) {
 			timer_training.stop();
-			
+
 			trainingScore /= GAMES_PER_TRAINING;
-			
+
 			System.out.println("\n\n");
-			
+
 			if(lastAvgScore >= 0) {
 				// TODO evtl erst berücksichtigen wenn änderung > 1%
 				if(lastAvgScore > trainingScore) {
@@ -164,8 +183,9 @@ public final class LcsPacMan extends AbstractPlayer{
 					System.out.println("good mutation happened: " + lastAvgScore + " > " + trainingScore);
 					lastAvgScore = trainingScore;
 				}
-			} else
+			} else {
 				lastAvgScore = trainingScore;
+			}
 
 
 			System.out.println("");
@@ -173,19 +193,19 @@ public final class LcsPacMan extends AbstractPlayer{
 			System.out.println("Avg prepare      time: " + timer_prepare.getAvgInMs()      + "ms");
 			System.out.println("Avg match        time: " + timer_match.getAvgInMs()        + "ms");
 			System.out.println("Avg getDirection time: " + timer_getDirection.getAvgInMs()  + "ms");
-			System.out.println("Avg training     time: " + timer_training.getAvgInMs()/(float)GAMES_PER_TRAINING + "ms");
+			System.out.println("Avg training     time: " + timer_training.getAvgInMs()/GAMES_PER_TRAINING + "ms");
 			System.out.println("    training     time: " + timer_training.getAvgInMs()/1000.0f + "s");
-			
+
 			System.out.println("Avg score after " + GAMES_PER_TRAINING + " rounds: " + trainingScore);
-			System.out.println("Training " + (round * 100.0f / totalTrainings) + "% complete");
+			System.out.println("Training " + round * 100.0f / totalTrainings + "% complete");
 			System.out.println("");
 			FitnessSave.mutate();
-			
+
 			timer_training.start();
 		}
 	}
 
-	public void trainingOver(int trainings) {
+	public void trainingOver(final int trainings) {
 		FitnessSave.dump();
 	}
 }
