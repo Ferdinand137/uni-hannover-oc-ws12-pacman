@@ -36,41 +36,61 @@ public class MoveRecommendation {
 		}
 	}
 
+	@Override
+	public String toString()  {
+		return    fitnessArr[0] + " // "
+				+ fitnessArr[1] + " // "
+				+ fitnessArr[2] + " // "
+				+ fitnessArr[3];
+	}
+
 	/**
 	 * @return randomly choosen direction according to roulette, fitness... principle
 	 */
 	public Direction getRouletteFitness() {
+		// TODO diese funktion ist mindestens komisch... muss mal getestet werden :(
 
 		// choose random direction according to fitness
-		System.out.println(fitnessArr[0] + " // "
-						 + fitnessArr[1] + " // "
-						 + fitnessArr[2] + " // "
-						 + fitnessArr[3]);
 		int dir = -1;
-		{
-			float totalFitness = 0;
-			for (int i = 0; i < 4; i++) {
-				if(fitnessArr[i] != Float.NEGATIVE_INFINITY) {
-					totalFitness += fitnessArr[i];
-				}
-			}
-			float randomFloat = new Random().nextFloat() * totalFitness;
+		float totalFitness = 0;
 
-			for (int i = 0; i < 4; i++) {
-				if(fitnessArr[i] == Float.NEGATIVE_INFINITY) {
-					// da ist wohl ne wand!
-					continue;
-				}
+		for (int i = 0; i < 4; i++) {
+			if(RuleFunctions.game.getNeighbour(RuleFunctions.currentLocation, i) == -1) {
+				// in die richtung ist ne wand!
+				fitnessArr[i] = Float.NEGATIVE_INFINITY;
+			} else {
+				totalFitness += fitnessArr[i];
+			}
+		}
 
-				randomFloat -= fitnessArr[i];
-				if (randomFloat < 0) {
-					dir = i;
-					break;
-				}
+		System.out.print(this);
+
+		// we need fitness 30 to win over fitness 10 in more than 75% of all cases
+		// so lets try 30*30=900 vs 10*10=100 -> 88%
+		for (int i = 0; i < 4; i++) {
+			fitnessArr[i] = fitnessArr[i] * fitnessArr[i];
+		}
+
+
+
+		float randomFloat = new Random().nextFloat() * totalFitness;
+
+		for (int i = 0; i < 4; i++) {
+			if(fitnessArr[i] == Float.NEGATIVE_INFINITY) {
+				// da ist wohl ne wand!
+				continue;
 			}
-			if (dir < 0) {
-				System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
+
+			randomFloat -= fitnessArr[i];
+			if (randomFloat < 0) {
+				dir = i;
+				break;
 			}
+		}
+		assert randomFloat < 0;
+
+		if (dir < 0) {
+			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
 		}
 
 		return Direction.createFromInt(dir);

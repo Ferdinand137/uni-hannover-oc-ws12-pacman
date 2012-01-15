@@ -76,12 +76,16 @@ public class MoveAction {
 				// System.out.println(RuleFunctions.currentLocation + " -> " + junction + "; path: " + pacManPath);
 
 
-
 				// kürzesten pfad von geist zu junction finden
 				// TODO in RuleFunctions.getShortestGhostPath verschieben
 				int minGhostDist = Integer.MAX_VALUE;
 				for(int ghostId = 0; ghostId < G.NUM_GHOSTS; ghostId++) {
 					if(game.getLairTime(ghostId) > 0) {
+						continue;
+					}
+
+					if(game.isEdible(ghostId) && game.getEdibleTime(ghostId) > 5) {
+						// FIXME diese junctions verdienen eine positive bewertung! passiert das?
 						continue;
 					}
 
@@ -112,12 +116,14 @@ public class MoveAction {
 					// geist ist näher an junction
 					//System.out.println("bad");
 					//moveRecommendation.fitness[direction] -= fitness;
-					move.addFitness(direction, fitness, true);
+					//move.addFitness(direction, fitness, true);
+					//System.out.println("junction " + direction + " ist der geist näher. werte andere auf");
 				} else {
 					// pacman ist näher
 					//System.out.println("good");
 					//moveRecommendation.fitnessArr[direction] =+ fitness;
 					move.addFitness(direction, fitness, false);
+					System.out.println("junction " + direction + " ist pacman näher. werte auf. " + minGhostDist + " vs " + pacManPath.length());
 				}
 
 				GameView.addLines(game, minGhostDist < pacManPath.length() ? Color.RED : Color.GREEN, RuleFunctions.currentLocation, junction);

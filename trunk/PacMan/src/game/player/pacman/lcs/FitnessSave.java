@@ -11,6 +11,8 @@ public class FitnessSave {
 	static float lastPreMutationValue;
 
 	static void set(final String id, float value) {
+		assert value > 0.05f; // nur fürn moment, später rausnehmen!
+
 		if(value <= 0) {
 			System.out.println("WARNING: Fitness < 0 --> Fitness = 0");
 			value = 0;
