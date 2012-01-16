@@ -41,16 +41,20 @@ class ActionSet {
 	final Vector<Rule> actionSet = new Vector<Rule>();
 
 	// verschiedene werte probiert. macht immer keinen sinn
-	final static float BETA = 0.1f; // investiere 10% von fitness um bei erfolg 1.0 wiederzubekommen
-	final static float DISCOUNT_DELTA = 0.1f;
-	final static float TAX_TAU = 0.99f;
+	final static float BETA = 0.3f; // investiere 10% von fitness um bei erfolg 1.0 wiederzubekommen
+	final static float DISCOUNT_DELTA = 0.0000000000001f;
+	final static float TAX_TAU_NOT_TAKEN = 0.9f;
+	final static float TAX_TAU_OTHERS = 0.99f;
 
 	static {
 		assert BETA > 0;
 		assert BETA <= 1;
 		assert DISCOUNT_DELTA > 0;
 		assert DISCOUNT_DELTA <= 1;
-		assert TAX_TAU > 0;
+		assert TAX_TAU_OTHERS > 0;
+		assert TAX_TAU_OTHERS <= 1;
+		assert TAX_TAU_NOT_TAKEN > 0;
+		assert TAX_TAU_NOT_TAKEN <= 1;
 	}
 
 	public void add(final Rule rule) {
@@ -84,8 +88,14 @@ class ActionSet {
 			if(!actionSet.contains(rule)) {
 				LcsPacMan.debug("other rule vor tau: " + rule);
 				// ist tax überhaupt prozentual?
-				rule.setFitness(rule.getFitness() * TAX_TAU);
-				LcsPacMan.debug("other rule nach tau: " + rule);
+
+				if(rule.getMove() != null) {
+					rule.setFitness(rule.getFitness() * TAX_TAU_NOT_TAKEN);
+					LcsPacMan.debug("other rule nach tau not taken: " + rule);
+				} else {
+					rule.setFitness(rule.getFitness() * TAX_TAU_OTHERS);
+					LcsPacMan.debug("other rule nach tau others: " + rule);
+				}
 			}
 		}
 
@@ -165,8 +175,9 @@ public final class LcsPacMan extends AbstractPlayer{
 		// rein probehalber mal simple regeln:
 		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
 		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL, true)));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST)));
+		//ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST)));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST, true)));
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.TURN_BACK, true)));
 
 		try {
 			final File f = File.createTempFile("pacman", "log");
@@ -191,8 +202,8 @@ public final class LcsPacMan extends AbstractPlayer{
 
 		assert game.getScore() >= scoreAtLastGetActionCall;
 		if(lastActionSet != null && game.getScore() != scoreAtLastGetActionCall) {
-			debug("extra reward: " + 10 * (game.getScore() - scoreAtLastGetActionCall));
-			lastActionSet.doRewardStuff(10 * (game.getScore() - scoreAtLastGetActionCall));
+			debug("extra reward: " + (game.getScore() - scoreAtLastGetActionCall));
+			lastActionSet.doRewardStuff(game.getScore() - scoreAtLastGetActionCall);
 		}
 		scoreAtLastGetActionCall = game.getScore();
 
@@ -293,7 +304,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		}
 
 		// abzug für tot! nur kleiner abzug da diese regel evtl gar nichts dafür kann
-		lastActionSet.doRewardStuff(-1.0f);
+		// lastActionSet.doRewardStuff(-1.0f);
 
 		lastActionSet = null;
 
