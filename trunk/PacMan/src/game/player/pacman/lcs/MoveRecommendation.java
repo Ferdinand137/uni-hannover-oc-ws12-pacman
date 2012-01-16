@@ -1,9 +1,13 @@
 package game.player.pacman.lcs;
 
+import game.player.pacman.LcsPacMan;
+
 import java.util.Random;
+
 
 public class MoveRecommendation {
 	private final float[] fitnessArr;
+	private static final Random random = new Random();
 
 	public MoveRecommendation() {
 		fitnessArr = new float[4];
@@ -48,10 +52,28 @@ public class MoveRecommendation {
 	 * @return randomly choosen direction according to roulette, fitness... principle
 	 */
 	public Direction getRouletteFitness() {
-		// TODO diese funktion ist mindestens komisch... muss mal getestet werden :(
+		int bestDir = -1;
+
+		{
+			float best = Float.NEGATIVE_INFINITY;
+			for (int i = 0; i < 4; i++) {
+				if(RuleFunctions.game.getNeighbour(RuleFunctions.currentLocation, i) != -1) {
+					// nur wo keine wand ist
+					if(fitnessArr[i] > best) {
+						best = fitnessArr[i];
+						bestDir = i;
+					}
+				}
+			}
+		}
+
+		// just pick the best one most of the time!
+		if(random.nextFloat() < 0.95)
+			return Direction.createFromInt(bestDir);
+
+		fitnessArr[bestDir] *= 0.001f; // try choosing a different direction
 
 		// choose random direction according to fitness
-		int dir = -1;
 		float totalFitness = 0;
 
 		for (int i = 0; i < 4; i++) {
@@ -72,7 +94,8 @@ public class MoveRecommendation {
 
 
 
-		float randomFloat = new Random().nextFloat() * totalFitness;
+		float randomFloat = random.nextFloat() * totalFitness;
+		int dir = -1;
 
 		for (int i = 0; i < 4; i++) {
 			if(fitnessArr[i] == Float.NEGATIVE_INFINITY) {
@@ -98,6 +121,8 @@ public class MoveRecommendation {
 		if (dir < 0) {
 			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
 		}
+
+		LcsPacMan.debug("choosing random direction: " + Direction.createFromInt(dir) + " instead of " + Direction.createFromInt(bestDir));
 
 		return Direction.createFromInt(dir);
 	}
