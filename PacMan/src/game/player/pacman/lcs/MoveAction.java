@@ -57,6 +57,10 @@ public class MoveAction {
 			move.addFitness(RuleFunctions.getNextPowerPillDirection(), fitness, moveAway);
 			break;
 
+		case TURN_BACK:
+			move.addFitness(Direction.createFromInt(game.getReverse(game.getCurPacManDir())), fitness, moveAway);
+			break;
+
 		case JUNCTION:
 			// FIXME isEdible berücksichtigen... zu edible geistern (die genug zeit noch haben) darf pacman ruhig hin
 
