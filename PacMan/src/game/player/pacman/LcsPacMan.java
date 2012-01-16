@@ -3,9 +3,7 @@ package game.player.pacman;
 import game.core.Game;
 import game.player.pacman.lcs.Direction;
 import game.player.pacman.lcs.DistanceCondition;
-import game.player.pacman.lcs.EdibleCondition;
 import game.player.pacman.lcs.FitnessSave;
-import game.player.pacman.lcs.JunctionCondition;
 import game.player.pacman.lcs.MoveAction;
 import game.player.pacman.lcs.MoveRecommendation;
 import game.player.pacman.lcs.Rule;
@@ -13,6 +11,10 @@ import game.player.pacman.lcs.RuleFunctions;
 import game.player.pacman.lcs.Thing;
 import gui.AbstractPlayer;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Vector;
 
 /**
@@ -37,45 +39,57 @@ class Timer {
 
 class ActionSet {
 	final Vector<Rule> actionSet = new Vector<Rule>();
-	final static float beta = 0.5f;
-	final static float discount_delta = 0.99f;
-	final static float tax_tau = 0.9999f;
+
+	// verschiedene werte probiert. macht immer keinen sinn
+	final static float BETA = 0.1f; // investiere 10% von fitness um bei erfolg 1.0 wiederzubekommen
+	final static float DISCOUNT_DELTA = 0.1f;
+	final static float TAX_TAU = 0.99f;
 
 	static {
-		assert beta > 0;
-		assert beta <= 1;
-		assert discount_delta > 0;
-		assert discount_delta <= 1;
-		assert tax_tau > 0;
+		assert BETA > 0;
+		assert BETA <= 1;
+		assert DISCOUNT_DELTA > 0;
+		assert DISCOUNT_DELTA <= 1;
+		assert TAX_TAU > 0;
 	}
 
 	public void add(final Rule rule) {
 		actionSet.add(rule);
 	}
 
-	public void doStuff(final ActionSet lastActionSet) {
+	public void doStuffEveryGetActionCall(final ActionSet lastActionSet) {
 		float bucket = 0;
 
-		// redistribute fitness
+		// redistribute fitness into bucket
 		for (final Rule rule : actionSet) {
+			LcsPacMan.debug("action set rule vor beta: " + rule);
 			final float fitness = rule.getFitness();
-			bucket += fitness * beta;
-			rule.setFitness(fitness * (1-beta));
+			bucket += fitness * BETA;
+			rule.setFitness(fitness * (1-BETA));
+			LcsPacMan.debug("action set rule nach beta: " + rule);
 		}
 
-		bucket *= discount_delta;
+		// bucket abwerten
+		bucket *= DISCOUNT_DELTA;
 
 		// at first round lastActionSet is empty
 		if(lastActionSet != null) {
+			// bucket umverteilen auf altes action set
+			LcsPacMan.debug("Verteile " + bucket / lastActionSet.size() + " auf lastActionSet");
 			lastActionSet.addFitnessToRules(bucket / lastActionSet.size());
 		}
 
 		// tax all rules not in here
 		for (final Rule rule : LcsPacMan.ruleSet) {
 			if(!actionSet.contains(rule)) {
-				rule.setFitness(rule.getFitness() * tax_tau);
+				LcsPacMan.debug("other rule vor tau: " + rule);
+				// ist tax überhaupt prozentual?
+				rule.setFitness(rule.getFitness() * TAX_TAU);
+				LcsPacMan.debug("other rule nach tau: " + rule);
 			}
 		}
+
+		LcsPacMan.debug("nach doStuffEveryGetActionCall: " + this);
 	}
 
 	private void addFitnessToRules(final float fitness) {
@@ -85,20 +99,45 @@ class ActionSet {
 	}
 
 	void doRewardStuff(final float reward) {
+		if(reward == 0) return;
+
+		LcsPacMan.debug("vor reward: " + this);
 		for (final Rule rule : actionSet) {
-			rule.setFitness(rule.getFitness() + reward * beta / size());
+			rule.setFitness(rule.getFitness() + reward / size());
 		}
+		LcsPacMan.debug("nach reward: " + this);
 	}
 
 	private float size() {
 		return actionSet.size();
+	}
+
+	@Override
+	public String toString() {
+		String r = "ActionSet {";
+		for (final Rule rule : actionSet) {
+			r += rule + ", ";
+		}
+		return r + "}";
 	}
 }
 
 public final class LcsPacMan extends AbstractPlayer{
 
 	final static Vector<Rule> ruleSet = new Vector<Rule>();
+	private static boolean lastTrainingRound = true;
+	static BufferedWriter log;
+	public static void debug(final String s) {
+		if(!lastTrainingRound) return;
 
+		try {
+			log.append(s);
+			log.append('\n');
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	final static Timer timer_total = new Timer(), timer_prepare = new Timer(), timer_match = new Timer(), timer_getDirection = new Timer(), timer_training = new Timer();
 
 	ActionSet lastActionSet;
@@ -112,6 +151,7 @@ public final class LcsPacMan extends AbstractPlayer{
 	}
 
 	static {
+		/*
 		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
 		ruleSet.add(new Rule().add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 5)).add(new DistanceCondition(Thing.POWER_PILL, 0, 7.5f)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
@@ -119,14 +159,42 @@ public final class LcsPacMan extends AbstractPlayer{
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 5, 10)).add(new DistanceCondition(Thing.POWER_PILL, 5, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST, true)));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 27.5f)).setAction(new MoveAction(Thing.POWER_PILL, true)));
-
-		// junction rule on steroids
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 50)).add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)));
+		*/
+
+		// rein probehalber mal simple regeln:
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)));
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL, true)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST, true)));
+
+		try {
+			final File f = File.createTempFile("pacman", "log");
+			f.deleteOnExit();
+
+			log = new BufferedWriter(new FileWriter(f));
+
+			System.out.println(f.getAbsolutePath());
+		} catch (final IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
+
+	int scoreAtLastGetActionCall = 0;
 
 	@Override
 	public int getAction(final Game game,final long timeDue){
 		timer_total.start();
+
+		debug("---------------------------------------");
+
+		assert game.getScore() >= scoreAtLastGetActionCall;
+		if(lastActionSet != null && game.getScore() != scoreAtLastGetActionCall) {
+			debug("extra reward: " + 10 * (game.getScore() - scoreAtLastGetActionCall));
+			lastActionSet.doRewardStuff(10 * (game.getScore() - scoreAtLastGetActionCall));
+		}
+		scoreAtLastGetActionCall = game.getScore();
 
 		//System.out.println("time: " + (timeDue - System.currentTimeMillis()));
 		//System.out.println("---");
@@ -156,29 +224,36 @@ public final class LcsPacMan extends AbstractPlayer{
 		}
 
 		final Direction dir = move.getRouletteFitness();
-		//System.out.println(move + " -> laufe nach: " + dir);
+		debug(move + " -> laufe nach: " + dir);
 
 		final ActionSet actionSet = new ActionSet();
 		for (final Rule rule : ruleSet) {
 			final MoveRecommendation ruleMove = rule.getMove();
 			if(ruleMove != null && ruleMove.getFitness(dir) > 0) {
+				debug("rule {{" + rule + "}} sagte " + dir + " ebenfalls vorraus: " + ruleMove);
 				actionSet.add(rule);
 			}
 		}
 
-		actionSet.doStuff(lastActionSet);
-/*
-		System.out.println("\n\nRegeln vor doStuff:");
-		for (final Rule rule : ruleSet) {
-			System.out.println(rule);
+		if(lastActionSet != null) {
+			lastActionSet.doRewardStuff(1.0f);
+			if(lastTrainingRound) {
+				debug("\n\nRegeln nach reward set krams:");
+				for (final Rule rule : ruleSet) {
+					debug(rule.toString());
+				}
+				debug("\n");
+			}
 		}
-		actionSet.doStuff(lastActionSet);
-		System.out.println("\nRegeln nach doStuff:");
-		for (final Rule rule : ruleSet) {
-			System.out.println(rule);
+
+		actionSet.doStuffEveryGetActionCall(lastActionSet);
+
+		if(lastTrainingRound) {
+			debug("\n\nRegeln nach action set krams:");
+			for (final Rule rule : ruleSet) {
+				debug(rule.toString());
+			}
 		}
-		System.out.println("\n\n\n\n");
-*/
 		lastActionSet = actionSet;
 
 		// dann nachm motto:
@@ -199,29 +274,31 @@ public final class LcsPacMan extends AbstractPlayer{
 
 	public void trainingBegin(final int totalTrainings) {
 		timer_training.start();
+		lastTrainingRound = false;
 	}
 
 	int lastAvgScore = -1;
 	int trainingScore = 0;
 	public void trainingRoundOver(final int round, final int totalTrainings, final Game game) {
+		if(round == totalTrainings-1) {
+			lastTrainingRound = true;
+		}
+
 		trainingScore += game.getScore();
+		scoreAtLastGetActionCall = 0;
 
 		System.out.println("\n\nRegeln nach Runde " + round + ":");
 		for (final Rule rule : ruleSet) {
 			System.out.println(rule);
 		}
 
-		lastActionSet.doRewardStuff(game.getScore());
-
-		System.out.println("\n\nRegeln nach Runde " + round + " + Reward:");
-		for (final Rule rule : ruleSet) {
-			System.out.println(rule);
-		}
+		// abzug für tot! nur kleiner abzug da diese regel evtl gar nichts dafür kann
+		lastActionSet.doRewardStuff(-1.0f);
 
 		lastActionSet = null;
 
 		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
-		final int GAMES_PER_TRAINING = 100;
+		//final int GAMES_PER_TRAINING = 100;
 
 		/*
 		if((round+1) % GAMES_PER_TRAINING == 0) {

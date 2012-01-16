@@ -208,7 +208,7 @@ public class MoveAction {
 	}
 
 	String toId() {
-		return "#MA:" + thing.toId() + "#";
+		return "#MA:" + thing.toId() + ":" + (moveAway ? 'A' : 'T') + "#";
 	}
 
 	@Override
