@@ -28,6 +28,9 @@ public class LcsGhost extends AbstractGhost
 	}
 
 	static {
+		// "default" geh richtung pacman
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.POWER_PILL)).setFitness(0.1f));
+
 		// pacman nahe + !essbar => gehe hin
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.PACMAN)));
 
@@ -44,6 +47,11 @@ public class LcsGhost extends AbstractGhost
 
 	@Override
 	public int[] getActions(final Game game, final long timeDue) {
+		if(game.gameOver()) {
+			System.out.println("YEAH");
+			return null; // muhaha gibt nullpointer :)
+		}
+
 		final int response[] = new int [Game.NUM_GHOSTS];
 
 		RuleFunctions.prepareNextRound(game);
@@ -54,6 +62,7 @@ public class LcsGhost extends AbstractGhost
 				continue ghostLoop;
 			}
 
+			System.out.println("\nBerechne Geist " + ghostId);
 
 			final MoveRecommendation move = new MoveRecommendation();
 			for (final Rule rule : ruleSet) {

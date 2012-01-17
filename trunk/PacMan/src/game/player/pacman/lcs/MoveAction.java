@@ -25,7 +25,24 @@ public class MoveAction {
 
 	MoveRecommendation getGhostMove(final Game game, final float fitness, final int whichGhost) {
 		final MoveRecommendation move = new MoveRecommendation();
-		move.addFitness(RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc()).getStartDirection(game), fitness, moveAway);
+
+		switch (thing) {
+		case GHOST:
+			System.out.println("------------");
+			if(moveAway) {
+				final Path path = RuleFunctions.getPath(game.getCurPacManLoc(), game.getCurGhostLoc(whichGhost));
+				GameView.addPoints(game, Color.RED, path.path);
+				move.addFitness(path.getStartDirection(game), fitness, true);
+			} else {
+				final Path path = RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc());
+				GameView.addPoints(game, Color.GREEN, path.path);
+				move.addFitness(path.getStartDirection(game), fitness, false);
+			}
+		case POWER_PILL:
+			move.addFitness(RuleFunctions.getNextPowerPillDirection(whichGhost), fitness, moveAway);
+			break;
+
+		}
 		return move;
 	}
 
