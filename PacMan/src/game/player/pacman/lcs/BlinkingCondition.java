@@ -5,13 +5,13 @@ import game.core.Game;
 public class BlinkingCondition implements Condition {
 
 	boolean blinking;
-	
-	public BlinkingCondition(boolean blinking) {
+
+	public BlinkingCondition(final boolean blinking) {
 		this.blinking = blinking;
 	}
-	
+
 	@Override
-	public boolean matchForPacMan(Game game) {
+	public boolean matchForPacMan(final Game game) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -19,5 +19,11 @@ public class BlinkingCondition implements Condition {
 	@Override
 	public String toId() {
 		return "#BC#";
+	}
+
+	@Override
+	public boolean matchForGhost(final Game game, final int whichGhost) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }
