@@ -23,6 +23,11 @@ public class MoveAction {
 		this.moveAway = moveAway;
 	}
 
+	MoveRecommendation getGhostMove(final Game game, final float fitness, final int whichGhost) {
+		final MoveRecommendation move = new MoveRecommendation();
+		move.addFitness(RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc()).getStartDirection(game), fitness, moveAway);
+		return move;
+	}
 
 	MoveRecommendation getMove(final Game game, final float fitness) {
 		final MoveRecommendation move = new MoveRecommendation();
