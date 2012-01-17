@@ -27,7 +27,7 @@ public class MoveAction {
 		final MoveRecommendation move = new MoveRecommendation();
 
 		switch (thing) {
-		case GHOST:
+		case PACMAN:
 			System.out.println("------------");
 			if(moveAway) {
 				final Path path = RuleFunctions.getPath(game.getCurPacManLoc(), game.getCurGhostLoc(whichGhost));
