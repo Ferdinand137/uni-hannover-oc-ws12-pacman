@@ -30,7 +30,7 @@ public class MoveAction {
 		case PACMAN:
 			System.out.println("------------");
 			if(moveAway) {
-				final Path path = RuleFunctions.getPath(game.getCurPacManLoc(), game.getCurGhostLoc(whichGhost));
+				final Path path = RuleFunctions.getPath(game.getCurGhostLoc(whichGhost), game.getCurPacManLoc());
 				GameView.addPoints(game, Color.RED, path.path);
 				move.addFitness(path.getStartDirection(game), fitness, true);
 			} else {
@@ -42,7 +42,10 @@ public class MoveAction {
 			move.addFitness(RuleFunctions.getNextPowerPillDirection(whichGhost), fitness, moveAway);
 			break;
 
+		default:
+			throw new RuntimeException();
 		}
+
 		return move;
 	}
 
