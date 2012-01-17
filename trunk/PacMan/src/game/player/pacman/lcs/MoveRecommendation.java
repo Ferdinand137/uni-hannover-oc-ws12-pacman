@@ -97,7 +97,8 @@ public class MoveRecommendation {
 
 
 		float randomFloat = random.nextFloat() * totalFitness;
-		int dir = -1;
+		// TODO vorher: dir = -1 ... wieso? Stürzt dann aber ab
+		int dir = 0;
 
 		for (int i = 0; i < 4; i++) {
 			if(fitnessArr[i] == Float.NEGATIVE_INFINITY) {
@@ -121,7 +122,7 @@ public class MoveRecommendation {
 		}
 
 		if (dir < 0) {
-			System.out.println("ACHTUNG keine passende Regel, was nu?"); // FIXME
+			System.out.println("ACHTUNG keine passende Regel, was nu? " + dir); // FIXME
 		}
 
 		LcsPacMan.debug("choosing random direction: " + Direction.createFromInt(dir) + " instead of " + Direction.createFromInt(bestDir));
