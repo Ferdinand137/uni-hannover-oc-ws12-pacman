@@ -15,7 +15,7 @@ public class EdibleCondition implements Condition {
 	}
 
 	@Override
-	public boolean match(final Game game) {
+	public boolean matchForPacMan(final Game game) {
 		final int nearestGhost = RuleFunctions.getNextGhostId();
 		return edible == game.isEdible(nearestGhost);
 	}

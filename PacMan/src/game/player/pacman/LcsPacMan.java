@@ -128,7 +128,7 @@ public final class LcsPacMan extends AbstractPlayer{
 //			++regelZumAusgebenNurBlub;
 
 			timer_match.start();
-			final boolean match = rule.match(game);
+			final boolean match = rule.matchForPacMan(game);
 			timer_match.stop();
 
 			if(match) {
