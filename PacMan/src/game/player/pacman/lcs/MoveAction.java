@@ -24,6 +24,7 @@ public class MoveAction {
 	}
 
 	MoveRecommendation getGhostMove(final Game game, final float fitness, final int whichGhost) {
+
 		final MoveRecommendation move = new MoveRecommendation();
 
 		switch (thing) {
@@ -54,6 +55,40 @@ public class MoveAction {
 			if(game.getNumActivePowerPills() > 0) {
 				move.addFitness(RuleFunctions.getNextPowerPillDirection(whichGhost), fitness, moveAway);
 			}
+			break;
+
+		case GHOST:
+			int dist = Integer.MAX_VALUE;
+			int nextGhost = -1;
+
+			for (int i = 0; i < G.NUM_GHOSTS; i++) {
+				if (game.getLairTime(i) > 0 || i == whichGhost)
+				 {
+					continue; // ignore erstmal
+				}
+
+				final int distGhostToGhost = game.getPathDistance(game.getCurGhostLoc(whichGhost), game.getCurGhostLoc(i));
+
+				if(distGhostToGhost < dist) {
+					dist = distGhostToGhost;
+					nextGhost = i;
+				}
+			}
+
+			assert nextGhost >= 0;
+			assert nextGhost < 4;
+
+			GameView.addLines(game, Color.MAGENTA, game.getCurGhostLoc(whichGhost), game.getCurGhostLoc(nextGhost));
+
+			System.out.println("ghost " + whichGhost + " at " + game.getCurGhostLoc(whichGhost));
+			System.out.println("ghost " + nextGhost + " at " + game.getCurGhostLoc(nextGhost));
+
+			final Path path = RuleFunctions.getPath(game.getCurGhostLoc(whichGhost), game.getCurGhostLoc(nextGhost));
+
+			System.out.println(path.getStartDirection(game));
+			System.out.println("path: " + path);
+			System.out.println("Geister trennet euch: " + fitness);
+			move.addFitness(path.getStartDirection(game), fitness, moveAway);
 			break;
 
 		default:
