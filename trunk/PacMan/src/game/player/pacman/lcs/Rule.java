@@ -30,6 +30,17 @@ public class Rule implements Condition {
 		return true;
 	}
 
+	@Override
+	public boolean matchForGhost(final Game game, final int whichGhost) {
+		move = null;
+
+		for (final Condition condition : conditions) {
+			if(!condition.matchForGhost(game, whichGhost))
+				return false;
+		}
+		return true;
+	}
+
 	public Rule add(final Condition condition) {
 		conditions.add(condition);
 		return this;
