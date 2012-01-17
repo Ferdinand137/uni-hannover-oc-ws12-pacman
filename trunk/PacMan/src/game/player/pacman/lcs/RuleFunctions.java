@@ -97,7 +97,7 @@ public class RuleFunctions {
 		if(path.length() == 1 || path == Path.ENDLESS)
 			return Direction.createFromInt(game.getCurPacManDir());
 
-		for (final Direction direction : Direction.values()) {
+		for (final Direction direction : Direction.iter()) {
 			if (game.getNeighbour(currentLocation, direction.toInt()) == path.path[1])
 				return direction;
 		}
@@ -121,10 +121,14 @@ public class RuleFunctions {
 		return pathsToGhosts;
 	}
 
+	public static Direction getNextPillDirection(final int whichGhost) {
+		final int nextPill = game.getTarget(game.getCurGhostLoc(whichGhost), game.getPillIndicesActive(), true, Game.DM.PATH);
+		final Path path = getGhostPath(whichGhost, nextPill);
+		return path.getStartDirection(game);
+	}
 	public static Direction getNextPowerPillDirection(final int whichGhost) {
 		final int nextPowerPill = game.getTarget(game.getCurGhostLoc(whichGhost), game.getPowerPillIndicesActive(), true, Game.DM.PATH);
 		final Path path = getGhostPath(whichGhost, nextPowerPill);
-		System.out.println("next power pill: " + path);
 		return path.getStartDirection(game);
 	}
 }

@@ -16,8 +16,6 @@ import game.controllers.PacManController;
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 
-
-@SuppressWarnings({ "rawtypes", "unchecked" })
 public class MainFrame extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = -6408345358982189571L;
@@ -26,6 +24,7 @@ public class MainFrame extends javax.swing.JFrame {
         try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		} catch (final Exception ex) {
+			/*blub*/
 		}
         initComponents(component);
         setVisible(true);
