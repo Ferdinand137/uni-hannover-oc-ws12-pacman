@@ -59,7 +59,7 @@ public class LcsGhost extends AbstractGhost
 				}
 			}
 
-			final Direction dir = move.getRouletteFitness();
+			final Direction dir = move.getRouletteFitness(game.getCurGhostLoc(ghostId));
 			debug("Geist " + ghostId + " :: " + move + " -> laufe nach: " + dir);
 
 			response[ghostId] = dir.toInt();

@@ -51,13 +51,13 @@ public class MoveRecommendation {
 	/**
 	 * @return randomly choosen direction according to roulette, fitness... principle
 	 */
-	public Direction getRouletteFitness() {
+	public Direction getRouletteFitness(final int currentPos) {
 		int bestDir = -1;
 
 		{
 			float best = Float.NEGATIVE_INFINITY;
 			for (int i = 0; i < 4; i++) {
-				if(RuleFunctions.game.getNeighbour(RuleFunctions.currentLocation, i) != -1) {
+				if(RuleFunctions.game.getNeighbour(currentPos, i) != -1) {
 					// nur wo keine wand ist
 					if(fitnessArr[i] > best) {
 						best = fitnessArr[i];

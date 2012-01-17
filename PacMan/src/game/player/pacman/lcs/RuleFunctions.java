@@ -5,7 +5,7 @@ import game.core.Game;
 
 public class RuleFunctions {
 
-	static int currentLocation;
+	public static int currentLocation;
 	static SetOfPaths pathsToGhosts;
 	static PathToGhost closestGhost;
 	static Path closestPill;
