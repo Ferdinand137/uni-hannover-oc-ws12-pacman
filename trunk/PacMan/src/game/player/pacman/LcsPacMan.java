@@ -139,7 +139,7 @@ public final class LcsPacMan extends AbstractPlayer{
 			}
 		}
 
-		final Direction dir = move.getRouletteFitness();
+		final Direction dir = move.getRouletteFitness(RuleFunctions.currentLocation);
 		debug(move + " -> laufe nach: " + dir);
 
 		final ActionSet actionSet = new ActionSet();
