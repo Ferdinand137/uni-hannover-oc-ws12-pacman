@@ -44,4 +44,11 @@ public class DistanceCondition implements Condition {
 	public String toString() {
 		return thing + " between " + min + " and " + max;
 	}
+
+	@Override
+	public boolean matchForGhost(final Game game, final int whichGhost) {
+		float dist = -1;
+		dist = game.getPathDistance(game.getCurPacManLoc(), whichGhost);
+		return min <= dist && dist <= max;
+	}
 }
