@@ -50,6 +50,19 @@ public class RuleFunctions {
 		return new Path(fixed);
 	}
 
+	/**
+	 * game.getPath() tut leider nicht das was es behauptet, der Zielpunkt fehlt!
+	 */
+	public static Path getGhostPath(final int whichGhost, final int to) {
+		if(whichGhost == -1 || to == -1) return Path.ENDLESS;
+
+		final int path[] = game.getGhostPath(game.getCurGhostLoc(whichGhost), to);
+		final int fixed[] = new int[path.length+1];
+		System.arraycopy(path, 0, fixed, 0, path.length);
+		fixed[path.length] = to;
+		return new Path(fixed);
+	}
+
 	public static int getNextGhostId() {
 		return closestGhost.ghostId;
 	}
