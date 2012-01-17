@@ -28,18 +28,32 @@ public class MoveAction {
 
 		switch (thing) {
 		case PACMAN:
-			System.out.println("------------");
 			if(moveAway) {
+				System.out.println(whichGhost + " laufe von pacman weg");
 				final Path path = RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc());
 				GameView.addPoints(game, Color.RED, path.path);
 				move.addFitness(path.getStartDirection(game), fitness, true);
 			} else {
 				final Path path = RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc());
 				GameView.addPoints(game, Color.GREEN, path.path);
-				move.addFitness(path.getStartDirection(game), fitness, false);
+				final Direction dir = path.getStartDirection(game);
+				System.out.println(whichGhost + " laufe zu pacman: " + dir);
+				move.addFitness(dir, fitness, false);
+				System.out.println("nach add");
 			}
+			break;
+
+		case PILL:
+			if(game.getNumActivePills() > 0) {
+				move.addFitness(RuleFunctions.getNextPillDirection(whichGhost), fitness, moveAway);
+			}
+			break;
+
+
 		case POWER_PILL:
-			move.addFitness(RuleFunctions.getNextPowerPillDirection(whichGhost), fitness, moveAway);
+			if(game.getNumActivePowerPills() > 0) {
+				move.addFitness(RuleFunctions.getNextPowerPillDirection(whichGhost), fitness, moveAway);
+			}
 			break;
 
 		default:
@@ -75,11 +89,15 @@ public class MoveAction {
 			break;
 
 		case PILL:
-			move.addFitness(RuleFunctions.getNextPillDirection(), fitness, moveAway);
+			if(game.getNumActivePills() > 0) {
+				move.addFitness(RuleFunctions.getNextPillDirection(), fitness, moveAway);
+			}
 			break;
 
 		case POWER_PILL:
-			move.addFitness(RuleFunctions.getNextPowerPillDirection(), fitness, moveAway);
+			if(game.getNumActivePowerPills() > 0) {
+				move.addFitness(RuleFunctions.getNextPowerPillDirection(), fitness, moveAway);
+			}
 			break;
 
 		case TURN_BACK:
@@ -194,7 +212,7 @@ public class MoveAction {
 	private int[] getPacManNeighboringJunctions(final Game game) {
 		final int[] junctions = new int[4];
 
-		for (final Direction startDirection : Direction.values()) {
+		for (final Direction startDirection : Direction.iter()) {
 			int pos = game.getPacManNeighbours()[startDirection.toInt()];
 			// nicht gegen die Wand planen!
 			if(pos == -1) {
@@ -210,7 +228,7 @@ public class MoveAction {
 
 				if(newPos < 0) {
 					// hups da ist ne wand. abbiegen!
-					for (final Direction newDirection : Direction.values()) {
+					for (final Direction newDirection : Direction.iter()) {
 						newPos = game.getNeighbour(pos, newDirection.toInt());
 						if(newPos != pos && newPos >= 0) {
 							// ausweg gefunden

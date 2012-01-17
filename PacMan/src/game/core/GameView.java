@@ -162,9 +162,10 @@ public final class GameView extends JComponent
     			System.err.println("dp: " + dp);
     			assert dp != null;
     		}
-
-    		bufferGraphics.setColor(dp.color);
-    		bufferGraphics.fillRect(dp.x*MAG+1,dp.y*MAG+5,10,10);
+    		else {
+	    		bufferGraphics.setColor(dp.color);
+	    		bufferGraphics.fillRect(dp.x*MAG+1,dp.y*MAG+5,10,10);
+    		}
     	}
 
     	for(int i=0;i<debugLines.size();i++)
@@ -344,7 +345,7 @@ public final class GameView extends JComponent
     	this.frame = new MainFrame(this);
 
         //just wait for a bit for player to be ready
-        try{Thread.sleep(2000);}catch(final Exception e){}
+        try{Thread.sleep(2000);}catch(final Exception e){/*blub*/}
 
         return this;
     }

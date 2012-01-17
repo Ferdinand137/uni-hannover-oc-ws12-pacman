@@ -1,7 +1,14 @@
 package game.player.pacman.lcs;
 
+
 public enum Direction {
-	UP, RIGHT, LEFT, DOWN;
+	UP, RIGHT, LEFT, DOWN, INVALID;
+
+	final static Direction arr [] = { UP, RIGHT, LEFT, DOWN };
+
+	public static Direction[] iter() {
+		return arr;
+	}
 
 	public static Direction createFromInt(final int dir) {
 		switch (dir) {

@@ -29,13 +29,17 @@ public class MoveRecommendation {
 		assert fitness >= 0;
 		assert direction != null;
 
+		if(direction == Direction.INVALID) return;
+
 		if(allExceptThisDirection) {
-			for (final Direction d : Direction.values()) {
+			for (final Direction d : Direction.iter()) {
 				if(d != direction) {
+					System.out.println("Adde1 " + fitness + " nach " + d);
 					fitnessArr[d.toInt()] += fitness;
 				}
 			}
 		} else {
+			System.out.println("Adde2 " + fitness + " nach " + direction);
 			fitnessArr[direction.toInt()] += fitness;
 		}
 	}
