@@ -56,7 +56,7 @@ public class RuleFunctions {
 	public static Path getGhostPath(final int whichGhost, final int to) {
 		if(whichGhost == -1 || to == -1) return Path.ENDLESS;
 
-		final int path[] = game.getGhostPath(game.getCurGhostLoc(whichGhost), to);
+		final int path[] = game.getGhostPath(whichGhost, to);
 		final int fixed[] = new int[path.length+1];
 		System.arraycopy(path, 0, fixed, 0, path.length);
 		fixed[path.length] = to;
