@@ -25,6 +25,11 @@ public class JunctionCondition implements Condition {
 	}
 
 	@Override
+	public boolean matchForGhost(final Game game, final int whichGhost) {
+		return false; // kein plan was hier sein sollte :)
+	}
+
+	@Override
 	public String toId() {
 		return "#JC#";
 	}

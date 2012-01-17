@@ -21,6 +21,11 @@ public class EdibleCondition implements Condition {
 	}
 
 	@Override
+	public boolean matchForGhost(final Game game, final int whichGhost) {
+		return game.isEdible(whichGhost) == edible;
+	}
+
+	@Override
 	public String toId() {
 		return "#EC:" + (edible ? 'T' : 'F') + '#';
 	}
