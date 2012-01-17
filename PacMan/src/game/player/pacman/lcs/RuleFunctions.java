@@ -119,4 +119,11 @@ public class RuleFunctions {
 	public static SetOfPaths getAllGhostPaths() {
 		return pathsToGhosts;
 	}
+
+	public static Direction getNextPowerPillDirection(final int whichGhost) {
+		final int nextPowerPill = game.getTarget(game.getCurGhostLoc(whichGhost), game.getPowerPillIndicesActive(), true, Game.DM.PATH);
+		final Path path = getGhostPath(whichGhost, nextPowerPill);
+		System.out.println("next power pill: " + path);
+		return path.getStartDirection(game);
+	}
 }

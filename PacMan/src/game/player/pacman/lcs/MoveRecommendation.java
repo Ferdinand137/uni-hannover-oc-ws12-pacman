@@ -54,6 +54,8 @@ public class MoveRecommendation {
 	public Direction getRouletteFitness(final int currentPos) {
 		int bestDir = -1;
 
+		System.out.println(this);
+
 		{
 			float best = Float.NEGATIVE_INFINITY;
 			for (int i = 0; i < 4; i++) {
@@ -110,11 +112,11 @@ public class MoveRecommendation {
 			}
 		}
 		if(randomFloat >= 0) {
-			System.err.println("0: " + fitnessArr[0]);
-			System.err.println("1: " + fitnessArr[1]);
-			System.err.println("2: " + fitnessArr[2]);
-			System.err.println("3: " + fitnessArr[3]);
-			System.err.println("randomFloat: " + randomFloat);
+			System.out.println("0: " + fitnessArr[0]);
+			System.out.println("1: " + fitnessArr[1]);
+			System.out.println("2: " + fitnessArr[2]);
+			System.out.println("3: " + fitnessArr[3]);
+			System.out.println("randomFloat: " + randomFloat);
 			assert false;
 		}
 
