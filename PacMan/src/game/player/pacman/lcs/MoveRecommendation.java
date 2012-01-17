@@ -79,7 +79,7 @@ public class MoveRecommendation {
 		float totalFitness = 0;
 
 		for (int i = 0; i < 4; i++) {
-			if(RuleFunctions.game.getNeighbour(RuleFunctions.currentLocation, i) == -1) {
+			if(RuleFunctions.game.getNeighbour(currentPos, i) == -1) {
 				// in die richtung ist ne wand!
 				fitnessArr[i] = Float.NEGATIVE_INFINITY;
 			} else {

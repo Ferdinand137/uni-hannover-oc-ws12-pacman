@@ -32,13 +32,13 @@ public class LcsGhost extends AbstractGhost
 		ruleSet.add(new Rule().setAction(new MoveAction(Thing.POWER_PILL)).setFitness(0.1f));
 
 		// pacman nahe + !essbar => gehe hin
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.PACMAN)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.PACMAN)).setFitness(15));
 
 		// pacman nahe + essbar => gehe weg
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(true )).setAction(new MoveAction(Thing.PACMAN, true)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(true )).setAction(new MoveAction(Thing.PACMAN, true)).setFitness(17));
 
 		// anderer geist sehr nahe => gehe weg
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST, true)));
+		// ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST, true)));
 	}
 
 	public static void debug(final String s) {
