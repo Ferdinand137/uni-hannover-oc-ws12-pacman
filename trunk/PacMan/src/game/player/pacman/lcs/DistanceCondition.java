@@ -15,7 +15,7 @@ public class DistanceCondition implements Condition {
 	}
 
 	@Override
-	public boolean match(final Game game) {
+	public boolean matchForPacMan(final Game game) {
 		float dist = -1;
 
 		switch (thing) {

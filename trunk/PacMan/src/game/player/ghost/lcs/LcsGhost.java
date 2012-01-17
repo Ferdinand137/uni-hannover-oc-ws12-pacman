@@ -3,6 +3,7 @@ package game.player.ghost.lcs;
 import game.core.Game;
 import game.player.pacman.lcs.Direction;
 import game.player.pacman.lcs.DistanceCondition;
+import game.player.pacman.lcs.EdibleCondition;
 import game.player.pacman.lcs.MoveAction;
 import game.player.pacman.lcs.MoveRecommendation;
 import game.player.pacman.lcs.Rule;
@@ -26,7 +27,7 @@ public class LcsGhost extends AbstractGhost
 	}
 
 	static {
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).setAction(new MoveAction(Thing.PACMAN)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.PACMAN)));
 	}
 
 	public static void debug(final String s) {
@@ -46,7 +47,7 @@ public class LcsGhost extends AbstractGhost
 
 			final MoveRecommendation move = new MoveRecommendation();
 			for (final Rule rule : ruleSet) {
-				if(rule.match(game)) {
+				if(rule.matchForPacMan(game)) {
 					move.addFitness(rule.generateMove(game));
 				}
 			}

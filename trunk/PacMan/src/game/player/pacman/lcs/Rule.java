@@ -20,11 +20,11 @@ public class Rule implements Condition {
 	// erstmal einfach alle den gleichen wert :)
 
 	@Override
-	public boolean match(final Game game) {
+	public boolean matchForPacMan(final Game game) {
 		move = null;
 
 		for (final Condition condition : conditions) {
-			if(!condition.match(game))
+			if(!condition.matchForPacMan(game))
 				return false;
 		}
 		return true;

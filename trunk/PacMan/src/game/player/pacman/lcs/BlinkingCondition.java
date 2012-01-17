@@ -11,7 +11,7 @@ public class BlinkingCondition implements Condition {
 	}
 	
 	@Override
-	public boolean match(Game game) {
+	public boolean matchForPacMan(Game game) {
 		// TODO Auto-generated method stub
 		return false;
 	}
