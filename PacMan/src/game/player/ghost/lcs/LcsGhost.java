@@ -27,7 +27,14 @@ public class LcsGhost extends AbstractGhost
 	}
 
 	static {
+		// pacman nahe + !essbar => gehe hin
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.PACMAN)));
+
+		// pacman nahe + essbar => gehe weg
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.PACMAN, 0, 50)).add(new EdibleCondition(true )).setAction(new MoveAction(Thing.PACMAN, true)));
+
+		// anderer geist sehr nahe => gehe weg
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 20)).setAction(new MoveAction(Thing.GHOST, true)));
 	}
 
 	public static void debug(final String s) {
@@ -47,7 +54,7 @@ public class LcsGhost extends AbstractGhost
 
 			final MoveRecommendation move = new MoveRecommendation();
 			for (final Rule rule : ruleSet) {
-				if(rule.matchForPacMan(game)) {
+				if(rule.matchForGhost(game, ghostId)) {
 					move.addFitness(rule.generateMove(game));
 				}
 			}
