@@ -1,7 +1,7 @@
 package game.player.pacman.lcs;
 
 public enum Thing {
-	GHOST, PILL, POWER_PILL, JUNCTION, TURN_BACK;
+	GHOST, PILL, POWER_PILL, JUNCTION, TURN_BACK, PACMAN;
 
 	String toId() {
 		switch(this) {
@@ -10,6 +10,7 @@ public enum Thing {
 		case POWER_PILL: return "PP";
 		case JUNCTION: return "J";
 		case TURN_BACK: return "C";
+		case PACMAN: return "PA";
 		default: throw new RuntimeException("invalid thing");
 		}
 	}
