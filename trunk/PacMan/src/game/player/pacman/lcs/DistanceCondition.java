@@ -1,5 +1,6 @@
 package game.player.pacman.lcs;
 
+import game.core.G;
 import game.core.Game;
 
 public class DistanceCondition implements Condition {
@@ -30,6 +31,9 @@ public class DistanceCondition implements Condition {
 		case POWER_PILL:
 			dist = RuleFunctions.getNextPowerPillDistance();
 			break;
+
+		default:
+			throw new RuntimeException("fall fehlt");
 		}
 
 		return min <= dist && dist <= max;
@@ -48,7 +52,31 @@ public class DistanceCondition implements Condition {
 	@Override
 	public boolean matchForGhost(final Game game, final int whichGhost) {
 		float dist = -1;
-		dist = game.getPathDistance(game.getCurPacManLoc(), whichGhost);
+		switch (thing) {
+		case PACMAN:
+			dist = game.getPathDistance(game.getCurPacManLoc(), game.getCurGhostLoc(whichGhost));
+			break;
+		case GHOST:
+			dist = Integer.MAX_VALUE;
+
+			for (int i = 0; i < G.NUM_GHOSTS; i++) {
+				if (game.getLairTime(i) > 0 || i == whichGhost)
+				{
+					continue; // ignore erstmal
+				}
+
+				final int distGhostToGhost = game.getPathDistance(game.getCurGhostLoc(whichGhost), game.getCurGhostLoc(i));
+
+				if(distGhostToGhost < dist) {
+					dist = distGhostToGhost;
+				}
+			}
+
+			System.out.println("next ghost: " + dist);
+			break;
+		default:
+			throw new RuntimeException("fall fehlt");
+		}
 		return min <= dist && dist <= max;
 	}
 }
