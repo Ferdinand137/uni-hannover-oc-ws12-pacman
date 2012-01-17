@@ -43,7 +43,7 @@ public class MoveAction {
 			break;
 
 		default:
-			throw new RuntimeException();
+			throw new RuntimeException("unbekanntes thing: " + thing);
 		}
 
 		return move;
