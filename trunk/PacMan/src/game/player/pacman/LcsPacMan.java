@@ -133,7 +133,7 @@ public final class LcsPacMan extends AbstractPlayer{
 
 			if(match) {
 				timer_getDirection.start();
-				final MoveRecommendation ruleMove = rule.generateMove(game);
+				final MoveRecommendation ruleMove = rule.generateMove(game, -1);
 				move.addFitness(ruleMove);
 				timer_getDirection.stop();
 			}

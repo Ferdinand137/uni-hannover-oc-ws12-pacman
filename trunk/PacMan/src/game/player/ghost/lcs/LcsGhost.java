@@ -58,7 +58,7 @@ public class LcsGhost extends AbstractGhost
 			final MoveRecommendation move = new MoveRecommendation();
 			for (final Rule rule : ruleSet) {
 				if(rule.matchForGhost(game, ghostId)) {
-					move.addFitness(rule.generateMove(game));
+					move.addFitness(rule.generateMove(game, ghostId));
 				}
 			}
 

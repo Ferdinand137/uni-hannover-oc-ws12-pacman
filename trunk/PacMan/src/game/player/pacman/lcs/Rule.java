@@ -57,9 +57,13 @@ public class Rule implements Condition {
 		return this;
 	}
 
-	public MoveRecommendation generateMove(final Game game) {
+	public MoveRecommendation generateMove(final Game game, final int whichGhost) {
 		final float fitness = getFitness();
-		move = action.getMove(game, fitness);
+		if(whichGhost < 0) {
+			move = action.getMove(game, fitness);
+		} else {
+			move = action.getGhostMove(game, fitness, whichGhost);
+		}
 		return move;
 	}
 
