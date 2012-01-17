@@ -21,17 +21,17 @@ import javax.swing.UIManager;
 public class MainFrame extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = -6408345358982189571L;
-    
-	public MainFrame(JComponent component) {
+
+	public MainFrame(final JComponent component) {
         try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		} catch (Exception ex) {
+		} catch (final Exception ex) {
 		}
         initComponents(component);
         setVisible(true);
     }
 
-	private void initComponents(JComponent component) {
+	private void initComponents(final JComponent component) {
         java.awt.GridBagConstraints gridBagConstraints;
 
         comboGhosts = new javax.swing.JComboBox();
@@ -50,7 +50,7 @@ public class MainFrame extends javax.swing.JFrame {
         comboGhosts.setMaximumSize(new java.awt.Dimension(200, 20));
         comboGhosts.setMinimumSize(new java.awt.Dimension(200, 20));
         comboGhosts.setPreferredSize(new java.awt.Dimension(200, 20));
-        comboGhosts.setSelectedIndex(3);
+        comboGhosts.setSelectedIndex(2);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
@@ -95,7 +95,7 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().add(trials, gridBagConstraints);
 
         startButton.setText("Start");
-        
+
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 4;
@@ -117,7 +117,7 @@ public class MainFrame extends javax.swing.JFrame {
     public javax.swing.JButton getButton() {
 		return startButton;
 	}
-    
+
     public PacManController getSelectedPacMan() {
 		return Configuration.getPlayer(comboPacMan.getSelectedIndex());
 	}
@@ -125,18 +125,18 @@ public class MainFrame extends javax.swing.JFrame {
 	public GhostController getSelectedGhost() {
 		return Configuration.getGhost(comboGhosts.getSelectedIndex());
 	}
-	
+
 	public int getTrials() {
 		try {
 			return Integer.parseInt(trials.getText());
-		} catch (NumberFormatException e) {
+		} catch (final NumberFormatException e) {
 			trials.setText("1");
 			return 1;
 		}
-		
+
 	}
-	
-	public void setTrials(String i) {
+
+	public void setTrials(final String i) {
 		trials.setText(i);
 	}
 

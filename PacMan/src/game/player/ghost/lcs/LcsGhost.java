@@ -7,6 +7,7 @@ import game.player.pacman.lcs.EdibleCondition;
 import game.player.pacman.lcs.MoveAction;
 import game.player.pacman.lcs.MoveRecommendation;
 import game.player.pacman.lcs.Rule;
+import game.player.pacman.lcs.RuleFunctions;
 import game.player.pacman.lcs.Thing;
 import gui.AbstractGhost;
 
@@ -44,6 +45,8 @@ public class LcsGhost extends AbstractGhost
 	@Override
 	public int[] getActions(final Game game, final long timeDue) {
 		final int response[] = new int [Game.NUM_GHOSTS];
+
+		RuleFunctions.prepareNextRound(game);
 
 		ghostLoop:
 		for (int ghostId = 0; ghostId < Game.NUM_GHOSTS; ghostId++) {
