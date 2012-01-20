@@ -1,5 +1,7 @@
 package game.player.pacman.lcs;
 
+import game.player.pacman.LcsPacMan;
+
 import java.util.HashMap;
 import java.util.Random;
 
@@ -11,9 +13,9 @@ public class FitnessSave {
 	static float lastPreMutationValue;
 
 	static void set(final String id, float value) {
-		if(value <= 0) {
-			System.err.println("WARNING: Fitness < 0 --> Fitness = 0");
-			value = 0;
+		if(value < 0.1f) {
+			System.err.println("WARNING: Fitness < 0.1 --> Fitness = 0.1");
+			value = 0.1f;
 		}
 
 		//if(Math.abs(get(id) - value) > 1) {
@@ -39,12 +41,23 @@ public class FitnessSave {
 		lastPreMutationValue = value;
 
 		switch(random.nextInt(4)) {
-		case 0: value -= 0.5f; break;
-		case 1: value -= 0.1f; break;
-		case 2: value += 0.1f; break;
-		case 3: value += 0.5f; break;
+		case 0: value -= 4.0f; break;
+		case 1: value -= 1.0f; break;
+		case 2: value += 1.0f; break;
+		case 3: value += 4.0f; break;
 		default: throw new RuntimeException("invalid random case");
 		}
+
+		boolean found = false;
+		for(final Rule rule : LcsPacMan.ruleSet) {
+			//System.out.println(lastMutationId + " vs " + rule.toId());
+			if(lastMutationId.equals(rule.toId())) {
+				System.out.println("fitness change of " + rule + " -> " + value);
+				found = true;
+				break;
+			}
+		}
+		assert found == true;
 
 		set(lastMutationId, value);
 	}
@@ -55,5 +68,9 @@ public class FitnessSave {
 
 	public static void dump() {
 		System.out.println(fitness);
+	}
+
+	public static void clear() {
+		fitness.clear();
 	}
 }
