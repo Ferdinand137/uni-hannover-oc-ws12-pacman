@@ -4,6 +4,7 @@ import game.core.Game;
 import game.player.pacman.lcs.Direction;
 import game.player.pacman.lcs.DistanceCondition;
 import game.player.pacman.lcs.EdibleCondition;
+import game.player.pacman.lcs.FitnessSave;
 import game.player.pacman.lcs.MoveAction;
 import game.player.pacman.lcs.MoveRecommendation;
 import game.player.pacman.lcs.Rule;
@@ -21,6 +22,10 @@ import java.util.Vector;
 public class LcsGhost extends AbstractGhost
 {
 	static Vector<Rule> ruleSet = new Vector<Rule>();
+
+	public LcsGhost() {
+		FitnessSave.clear();
+	}
 
 	@Override
 	public String getGhostGroupName() {

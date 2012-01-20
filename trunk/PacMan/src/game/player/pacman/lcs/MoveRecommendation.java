@@ -34,12 +34,12 @@ public class MoveRecommendation {
 		if(allExceptThisDirection) {
 			for (final Direction d : Direction.iter()) {
 				if(d != direction) {
-					System.out.println("Adde1 " + fitness + " nach " + d);
+					//System.out.println("Adde1 " + fitness + " nach " + d);
 					fitnessArr[d.toInt()] += fitness;
 				}
 			}
 		} else {
-			System.out.println("Adde2 " + fitness + " nach " + direction);
+			//System.out.println("Adde2 " + fitness + " nach " + direction);
 			fitnessArr[direction.toInt()] += fitness;
 		}
 	}
@@ -58,7 +58,7 @@ public class MoveRecommendation {
 	public Direction getRouletteFitness(final int currentPos) {
 		int bestDir = -1;
 
-		System.out.println(this);
+		//System.out.println(this);
 
 		{
 			float best = Float.NEGATIVE_INFINITY;
@@ -74,10 +74,10 @@ public class MoveRecommendation {
 		}
 
 		// just pick the best one most of the time!
-		if(random.nextFloat() < 0.95)
+		if(random.nextFloat() < 0.99)
 			return Direction.createFromInt(bestDir);
 
-		fitnessArr[bestDir] *= 0.001f; // try choosing a different direction
+		fitnessArr[bestDir] *= 0.5f; // try choosing a different direction
 
 		// choose random direction according to fitness
 		float totalFitness = 0;

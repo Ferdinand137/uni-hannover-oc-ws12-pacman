@@ -106,17 +106,29 @@ public class MoveAction {
 			// FIXME nicht nur kürzesten pfad betrachten.
 			// zB gibts manchmal 2 pfade die exakt gleich lang sind
 			for (final Path path : RuleFunctions.getAllGhostPaths().getIterable()) {
-				GameView.addPoints(game, Color.CYAN, path.path);
-
 				// geister weit weg ignorieren
 				// TODO 60... tjoa... hab ich ma so reingetan :)
-				if(path.length() > 60) {
+				if(path.length() > 50) {
 					continue;
+				}
+
+				if(!moveAway) {
+					GameView.addPoints(game, Color.GREEN, path.path);
+					//System.out.println("pfad: " + path.length());
+				} else {
+					GameView.addPoints(game, Color.PINK, path.path);
 				}
 
 				final Direction direction = RuleFunctions.getDirectionOfPath(path);
 
-				move.addFitness(direction, fitness, moveAway);
+				float f = fitness;
+				if(path.length() > 10) { f *= 0.85f; }
+				if(path.length() > 20) { f *= 0.85f; }
+				if(path.length() > 30) { f *= 0.7f; }
+				if(path.length() > 40) { f *= 0.7f; }
+				if(path.length() > 50) { f *= 0.7f; }
+
+				move.addFitness(direction, f, moveAway);
 
 				//moveRecommendation.fitness[direction.toInt()] = fitness; //1.0f / path.length() * fitness;
 				//System.out.println(Direction.createFromInt(direction) + " <- " + path.length() + " ::: " + path);
@@ -131,6 +143,10 @@ public class MoveAction {
 
 		case POWER_PILL:
 			if(game.getNumActivePowerPills() > 0) {
+				if(!moveAway) {
+					GameView.addPoints(game, Color.GREEN, RuleFunctions.closestPowerPill.path);
+				}
+
 				move.addFitness(RuleFunctions.getNextPowerPillDirection(), fitness, moveAway);
 			}
 			break;
@@ -187,7 +203,7 @@ public class MoveAction {
 				if(pacManPath.length() < minGhostDist) {
 					// manchmal ist der geist langsamer weil pacman einfach über ihn drüberlaufen will wärend der geist nicht drehen kann
 					for(int i = 0; i < G.NUM_GHOSTS; i++) {
-						if(pacManPath.goesOver(game.getCurGhostLoc(i))) {
+						if(!game.isEdible(i) && pacManPath.goesOver(game.getCurGhostLoc(i))) {
 							// durch nen geist laufen ist in der regel ne schlechte idee!
 							minGhostDist = 0;
 						}
@@ -195,7 +211,7 @@ public class MoveAction {
 				}
 
 				// so n pacman ist ganz schön dick, der hat nen radius! so grob 2 bis 10... ka
-				minGhostDist -= 10;
+				minGhostDist -= 9;
 
 				//System.out.print(pacManPath.getStartDirection(game) + ": " + minGhostDist + " / " + pacManPath.length() + " -> ");
 
