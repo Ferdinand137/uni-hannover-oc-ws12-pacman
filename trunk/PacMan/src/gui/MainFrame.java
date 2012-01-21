@@ -10,9 +10,6 @@ package gui;
  */
 
 
-import game.controllers.GhostController;
-import game.controllers.PacManController;
-
 import javax.swing.JComponent;
 import javax.swing.UIManager;
 
@@ -117,11 +114,11 @@ public class MainFrame extends javax.swing.JFrame {
 		return startButton;
 	}
 
-    public PacManController getSelectedPacMan() {
+    public AbstractPlayer getSelectedPacMan() {
 		return Configuration.getPlayer(comboPacMan.getSelectedIndex());
 	}
 
-	public GhostController getSelectedGhost() {
+	public AbstractGhost getSelectedGhost() {
 		return Configuration.getGhost(comboGhosts.getSelectedIndex());
 	}
 

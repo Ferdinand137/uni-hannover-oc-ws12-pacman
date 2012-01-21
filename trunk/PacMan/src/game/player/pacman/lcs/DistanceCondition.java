@@ -72,8 +72,14 @@ public class DistanceCondition implements Condition {
 				}
 			}
 
-			System.out.println("next ghost: " + dist);
+			// System.out.println("next ghost: " + dist);
 			break;
+		case POWER_PILL:
+			final int curLoc = game.getCurGhostLoc(whichGhost);
+			final int nearest = game.getTarget(curLoc, game.getPowerPillIndicesActive(), true, Game.DM.PATH);
+			dist = game.getPathDistance(curLoc, nearest);
+			break;
+
 		default:
 			throw new RuntimeException("fall fehlt");
 		}

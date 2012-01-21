@@ -6,9 +6,15 @@ import game.controllers.PacManController;
 import game.core.G;
 import game.core.GameView;
 import game.core._G_;
+import game.player.ghost.lcs.LcsGhost;
+import game.player.pacman.AbstractHuman;
 import game.player.pacman.LcsPacMan;
+import gui.AbstractGhost;
+import gui.AbstractPlayer;
+import gui.Configuration;
 
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 /*
  * This class may be used to execute the game in timed or un-timed modes, with or without
@@ -63,14 +69,22 @@ public class Exec {
 				.addActionListener(new java.awt.event.ActionListener() {
 					@Override
 					public void actionPerformed(final java.awt.event.ActionEvent evt) {
-						startButtonActionPerformed(evt);
+						try {
+							startButtonActionPerformed(evt);
+						} catch (final InstantiationException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						} catch (final IllegalAccessException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 		});
 	}
 
-	private void startButtonActionPerformed(final ActionEvent evt) {
-		final PacManController pacManController = gv.getMainFrame().getSelectedPacMan();
-		final GhostController ghostController = gv.getMainFrame().getSelectedGhost();
+	private void startButtonActionPerformed(final ActionEvent evt) throws InstantiationException, IllegalAccessException {
+		final AbstractPlayer pacManController = gv.getMainFrame().getSelectedPacMan();
+		final AbstractGhost ghostController = gv.getMainFrame().getSelectedGhost();
 
 		if(thread != null && thread.isAlive()){
 			game.setGameOver(true);
@@ -140,21 +154,46 @@ public class Exec {
 	 * deviation/error) helps to get a better idea of how well the controller is
 	 * likely to do in the competition.
 	 */
-	public void runExperiment(final PacManController pacManController,
-			final GhostController ghostController, final int trials) {
+	public void runExperiment(AbstractPlayer pacManController,
+			final AbstractGhost ghostController, final int trials) throws InstantiationException, IllegalAccessException {
 		double avgScore = 0;
 
 		final _G_ gameTmp = new _G_();
 		// int training = 1;
 
+		final ArrayList<AbstractGhost> allGhosts = new ArrayList<AbstractGhost>();
+		for (final Class<? extends AbstractGhost> ghostClass : Configuration.getGhosts()) {
+			if(ghostClass != LcsGhost.class) {
+				allGhosts.add(ghostClass.newInstance());
+			}
+		}
+
+		final ArrayList<AbstractPlayer> allPacmans = new ArrayList<AbstractPlayer>();
+		for (final Class<? extends AbstractPlayer> ghostClass : Configuration.getPlayers()) {
+			if(ghostClass != LcsPacMan.class && ghostClass != AbstractHuman.class) {
+				allPacmans.add(ghostClass.newInstance());
+			}
+		}
+
 		if(pacManController instanceof LcsPacMan) {
 			((LcsPacMan) pacManController).trainingBegin(trials);
 		}
+
+		if(ghostController instanceof LcsGhost) {
+			((LcsGhost) ghostController).trainingBegin(trials);
+		}
+
 
 		// bugfix by AlexL
 		GameView.isVisible = false;
 
 		for (int i = 0; i < trials; i++) {
+
+			//ghostController = allGhosts.get(i % allGhosts.size());
+			pacManController = allPacmans.get(i % allPacmans.size());
+			//System.out.print("simulating round with: " + ghostController.getGhostGroupName() + ".... ");
+			//System.out.print("simulating round with: " + pacManController.getGroupName() + ".... ");
+
 			gameTmp.newGame();
 
 			while (!gameTmp.gameOver()) {
@@ -163,6 +202,7 @@ public class Exec {
 						ghostController.getActions(gameTmp.copy(), due));
 			}
 
+			//System.out.println(" -> " + gameTmp.getScore());
 			avgScore += gameTmp.getScore();
 			//System.out.println("Training "+training+++" Punkte: "+gameTmp.getScore());
 			System.out.print('.');
@@ -170,9 +210,16 @@ public class Exec {
 			if(pacManController instanceof LcsPacMan) {
 				((LcsPacMan) pacManController).trainingRoundOver(i, trials, gameTmp);
 			}
+			if(ghostController instanceof LcsGhost) {
+				((LcsGhost) ghostController).trainingRoundOver(i, trials, gameTmp);
+			}
 		}
 		if(pacManController instanceof LcsPacMan) {
 			((LcsPacMan) pacManController).trainingOver(trials);
+		}
+
+		if(ghostController instanceof LcsGhost) {
+			((LcsGhost) ghostController).trainingOver(trials);
 		}
 
 		System.out.println("Gesamtpunkte/Versuche: "+avgScore+"/"+trials+" "+avgScore / trials);

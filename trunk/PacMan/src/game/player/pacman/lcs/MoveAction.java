@@ -30,17 +30,17 @@ public class MoveAction {
 		switch (thing) {
 		case PACMAN:
 			if(moveAway) {
-				System.out.println(whichGhost + " laufe von pacman weg");
+				//System.out.println(whichGhost + " laufe von pacman weg");
 				final Path path = RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc());
-				GameView.addPoints(game, Color.RED, path.path);
+				GameView.addPoints(game, Color.PINK, path.path);
 				move.addFitness(path.getStartDirection(game), fitness, true);
 			} else {
 				final Path path = RuleFunctions.getGhostPath(whichGhost, game.getCurPacManLoc());
 				GameView.addPoints(game, Color.GREEN, path.path);
 				final Direction dir = path.getStartDirection(game);
-				System.out.println(whichGhost + " laufe zu pacman: " + dir);
+				//System.out.println(whichGhost + " laufe zu pacman: " + dir);
 				move.addFitness(dir, fitness, false);
-				System.out.println("nach add");
+				//System.out.println("nach add");
 			}
 			break;
 
@@ -80,14 +80,14 @@ public class MoveAction {
 
 			GameView.addLines(game, Color.MAGENTA, game.getCurGhostLoc(whichGhost), game.getCurGhostLoc(nextGhost));
 
-			System.out.println("ghost " + whichGhost + " at " + game.getCurGhostLoc(whichGhost));
-			System.out.println("ghost " + nextGhost + " at " + game.getCurGhostLoc(nextGhost));
+			//System.out.println("ghost " + whichGhost + " at " + game.getCurGhostLoc(whichGhost));
+			//System.out.println("ghost " + nextGhost + " at " + game.getCurGhostLoc(nextGhost));
 
 			final Path path = RuleFunctions.getPath(game.getCurGhostLoc(whichGhost), game.getCurGhostLoc(nextGhost));
 
-			System.out.println(path.getStartDirection(game));
-			System.out.println("path: " + path);
-			System.out.println("Geister trennet euch: " + fitness);
+			//System.out.println(path.getStartDirection(game));
+			//System.out.println("path: " + path);
+			//System.out.println("Geister trennet euch: " + fitness);
 			move.addFitness(path.getStartDirection(game), fitness, moveAway);
 			break;
 
