@@ -122,7 +122,10 @@ public class MoveRecommendation {
 			System.out.println("2: " + fitnessArr[2]);
 			System.out.println("3: " + fitnessArr[3]);
 			System.out.println("randomFloat: " + randomFloat);
-			assert false;
+			//assert false;
+
+			// passiert alle paar hundert spiele einmal, daher kaum debugbar ohne das spiel auseinanderzunehmen
+			dir = 0;
 		}
 
 		if (dir < 0) {

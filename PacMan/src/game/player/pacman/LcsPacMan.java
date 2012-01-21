@@ -73,13 +73,13 @@ public final class LcsPacMan extends AbstractPlayer{
 
 		ruleSet.add(new Rule().setAction(new MoveAction(Thing.PILL)).setFitness(15));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 15)).add(new DistanceCondition(Thing.POWER_PILL, 0, 10)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(29));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 25)).add(new DistanceCondition(Thing.POWER_PILL, 0, 20)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(22));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 45)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST, true)).setFitness(21));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 25)).add(new EdibleCondition(true)).setAction(new MoveAction(Thing.GHOST)));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 25)).add(new DistanceCondition(Thing.POWER_PILL, 0, 25)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.POWER_PILL)).setFitness(28));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 45)).add(new EdibleCondition(false)).setAction(new MoveAction(Thing.GHOST, true)).setFitness(23));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 25)).add(new EdibleCondition(true)).setAction(new MoveAction(Thing.GHOST)).setFitness(24));
 		ruleSet.add(new Rule().add(new DistanceCondition(Thing.POWER_PILL, 0, 15)).setAction(new MoveAction(Thing.POWER_PILL, true)).setFitness(5));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 45)).add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(38));
-		ruleSet.add(new Rule().setAction(new MoveAction(Thing.TURN_BACK, true)).setFitness(2));
-		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 20, 20000)).add(new DistanceCondition(Thing.POWER_PILL, 0, 10)).setAction(new MoveAction(Thing.POWER_PILL, true)).setFitness(18));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 0, 45)).add(new JunctionCondition()).setAction(new MoveAction(Thing.JUNCTION)).setFitness(39));
+		ruleSet.add(new Rule().setAction(new MoveAction(Thing.TURN_BACK, true)).setFitness(4));
+		ruleSet.add(new Rule().add(new DistanceCondition(Thing.GHOST, 20, 20000)).add(new DistanceCondition(Thing.POWER_PILL, 0, 10)).setAction(new MoveAction(Thing.POWER_PILL, true)).setFitness(1));
 	}
 
 	static {
@@ -228,7 +228,7 @@ public final class LcsPacMan extends AbstractPlayer{
 		// lastActionSet.doRewardStuff(-1.0f);
 
 		lastActionSet = null;
-
+/*
 		// for the moment only 10 rounds per training. this is WAY too few but it's so damn slow :(
 		final int GAMES_PER_TRAINING = 100;
 
@@ -261,7 +261,7 @@ public final class LcsPacMan extends AbstractPlayer{
 
 			trainingScore = 0;
 			timer_training.start();
-		}
+		}*/
 	}
 
 	public void trainingOver(final int trainings) {

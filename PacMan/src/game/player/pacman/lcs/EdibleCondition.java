@@ -22,7 +22,7 @@ public class EdibleCondition implements Condition {
 
 	@Override
 	public boolean matchForGhost(final Game game, final int whichGhost) {
-		System.out.println("Geist: " + whichGhost + " ist essbar? " + game.isEdible(whichGhost) + " ==? " + edible);
+		// System.out.println("Geist: " + whichGhost + " ist essbar? " + game.isEdible(whichGhost) + " ==? " + edible);
 		return game.isEdible(whichGhost) == edible;
 	}
 

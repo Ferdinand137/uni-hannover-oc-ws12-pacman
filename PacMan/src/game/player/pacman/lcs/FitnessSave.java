@@ -1,6 +1,6 @@
 package game.player.pacman.lcs;
 
-import game.player.pacman.LcsPacMan;
+import game.player.ghost.lcs.LcsGhost;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -49,7 +49,7 @@ public class FitnessSave {
 		}
 
 		boolean found = false;
-		for(final Rule rule : LcsPacMan.ruleSet) {
+		for(final Rule rule : LcsGhost.ruleSet) {
 			//System.out.println(lastMutationId + " vs " + rule.toId());
 			if(lastMutationId.equals(rule.toId())) {
 				System.out.println("fitness change of " + rule + " -> " + value);
