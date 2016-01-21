@@ -1,0 +1,1 @@
+This is our PacMan and Ghost ai for the pacman-vs-ghosts.net challenge
